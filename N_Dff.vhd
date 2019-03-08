@@ -1,17 +1,21 @@
-LIBRARY IEEE;
-USE IEEE.std_logic_1164.all;
+library ieee;
+use ieee.std_logic_1164.all;
 
-ENTITY N_Dff IS
-GENERIC ( n : integer := 32);
-  PORT( Clk,Rst,En  : IN  std_logic;
-        d           : IN  std_logic_vector(n-1 DOWNTO 0);
-        q           : OUT std_logic_vector(n-1 DOWNTO 0));
-END N_Dff;
+entity n_dff is
+generic ( n : integer := 32);
+  port ( 
+    clk : in  std_logic;
+    rst : in  std_logic;
+    en  : in  std_logic;
+    d   : in  std_logic_vector(n-1 downto 0);
+    q   : out std_logic_vector(n-1 downto 0)
+  );
+end n_dff;
 
-architecture a_nDFF of N_Dff is
+architecture a_ndff of n_dff is
   begin
     loop1: for i in 0 to n-1 
-      Generate
-        fx:entity work.Dff port map( d(i) , clk , rst , en , q(i) );
-      end Generate;
-end a_nDFF;
+      generate
+        fx:entity work.dff port map( d(i) , clk , rst , en , q(i) );
+      end generate;
+end a_ndff;
