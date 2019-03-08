@@ -2,9 +2,9 @@ library ieee;
 use ieee.std_logic_1164.all;
 
 entity decoder4x16 is
-    port ( decoder_selector  : in  std_logic_vector (3 downto 0); 
-           decoder_output    : out std_logic_vector (15 downto 0); 
-           decoder_enable    : in  std_logic);                    
+    port ( decoder_selector  : in  std_logic_vector (3 downto 0);
+           decoder_output    : out std_logic_vector (15 downto 0);
+           decoder_enable    : in  std_logic);
 end decoder4x16;
 
 architecture a_decoder4x16 of decoder4x16 is

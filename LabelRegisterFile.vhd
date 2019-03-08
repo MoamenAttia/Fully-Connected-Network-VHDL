@@ -21,7 +21,7 @@ Architecture a_LabelRegisterFile of LabelRegisterFile is
     dst_decoder: entity work.decoder4x16 port map ( sel_dst , decoder_out_dst , decoderdstEn );
     src_decoder : entity work.decoder4x16 port map ( sel_src  , decoder_out_src  , decoderSrcEn  );
 
-    Label1  : entity work.N_Dff generic map ( n ) port map ( clk , rst , decoder_out_dst(0) , busLeft , lab1_out );
+    Label1  : entity work.N_Dff generic map ( n ) port map ( clk , rst , decoder_out_dst(0) , busLeft(15 downto 0) , lab1_out );
     tri_state_label1 : entity work.TriState generic map ( n ) port map ( decoder_out_src(0) , lab1_out , busRight );
 
     Label2  : entity work.N_Dff generic map ( n ) port map ( clk , rst , decoder_out_dst(1) , busLeft , lab2_out );

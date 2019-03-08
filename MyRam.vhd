@@ -18,7 +18,7 @@ Architecture a_Ram of MyRam is
     type ramType is array(0 to ramSize-1) of std_logic_vector(n-1 downto 0);
     signal myRam : ramType;
 begin
-    process(clk)
+    process(clk , state)
         begin
             if rising_edge(clk) then
                 if writeEnable = '1' then
