@@ -36,7 +36,7 @@ architecture a_decoder4x16 of decoder4x16 is
         elsif enable_decoder = '1' and selector_decoder = "1001" then
           decoder_output <= "0000001000000000";     -- Lab10
         elsif enable_decoder = '1' and selector_decoder = "1010" then
-          decoder_output <= "1111111111111111";     -- ALL
+          decoder_output <= "0000010000000000";     -- Garbage
         elsif enable_decoder = '1' and selector_decoder = "1011" then
           decoder_output <= "0000100000000000";     -- Garbage 
         elsif enable_decoder = '1' and selector_decoder = "1100" then
@@ -46,7 +46,7 @@ architecture a_decoder4x16 of decoder4x16 is
         elsif enable_decoder = '1' and selector_decoder = "1110" then
           decoder_output <= "0100000000000000";     -- Garbage
         elsif enable_decoder = '1' and selector_decoder = "1111" then
-          decoder_output <= "1000000000000000";     -- Garbage
+          decoder_output <= "1111111111111111";     -- ALL
         end if;
       end process;
 end a_decoder4x16;
