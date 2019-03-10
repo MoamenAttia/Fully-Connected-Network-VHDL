@@ -45,4 +45,4 @@ begin----------------------------------------------
 ----------------------------------------
  n: nadder GENERIC MAP (m) port map (input1 ,input2,temp,f,cout);
 ---------------------------------------------------------------
-end Architecture
+end Architecture;

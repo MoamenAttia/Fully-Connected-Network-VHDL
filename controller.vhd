@@ -31,18 +31,18 @@ architecture a_controller of controller is
     -- fetch_weights : state to fetch all weight (note: the weights will be on mdr all the time).
     -- ready : state whose job is to rise a signal to booth's algorithm to start multipication.
 
-    signal enable_decoder_src     : std_logic; -- enable the source decoder.
-    signal enable_decoder_dst     : std_logic; -- enable the destination decoder.
-    signal enable_mar_in          : std_logic; -- enable mar.
-    signal enable_mdr_in          : std_logic; -- enable mdr to put data in it.
-    signal enable_write           : std_logic; -- write signal to memory to enable to write the final result into ram.
-    signal enable_mdr_out         : std_logic; -- enable mdr to latch its data into bus.
+    signal enable_decoder_src     : std_logic := '0'; -- enable the source decoder.
+    signal enable_decoder_dst     : std_logic := '0'; -- enable the destination decoder.
+    signal enable_mar_in          : std_logic := '0'; -- enable mar.
+    signal enable_mdr_in          : std_logic := '0'; -- enable mdr to put data in it.
+    signal enable_write           : std_logic := '0'; -- write signal to memory to enable to write the final result into ram.
+    signal enable_mdr_out         : std_logic := '0'; -- enable mdr to latch its data into bus.
 
-    signal sel_src : std_logic_vector(3 downto 0); -- selector for the souce decoder.
-    signal sel_dst : std_logic_vector(3 downto 0); -- selector for the destination decoder.
+    signal sel_src : std_logic_vector(3 downto 0) := "0000"; -- selector for the souce decoder.
+    signal sel_dst : std_logic_vector(3 downto 0) := "0000"; -- selector for the destination decoder.
 
-    signal num      : std_logic_vector( label_size - 1 downto 0 ); -- number of neurons.
-    signal next_num : std_logic_vector( label_size - 1 downto 0 ); -- temp number of neurons to be decremented.
+    signal num      : std_logic_vector( label_size - 1 downto 0 ) := (others => '0'); -- number of neurons.
+    signal next_num : std_logic_vector( label_size - 1 downto 0 ) := (others => '0'); -- temp number of neurons to be decremented.
     
     signal state : state_type := idle;      -- main signal of fsm ( this is the main state ).
     signal next_state : state_type := idle; -- signal to avoid infinite loop.
@@ -50,12 +50,12 @@ architecture a_controller of controller is
     signal address : std_logic_vector(address_size - 1 downto 0) := (others => '0'); -- address of (num of neurons).
     signal next_address : std_logic_vector(address_size - 1 downto 0) := (others => '0'); -- temp address to be incremented after each state of fetch neuron
     
-    signal alu_inp1  : std_logic_vector(label_size - 1 downto 0); -- a
-    signal alu_inp2	 : std_logic_vector(label_size - 1 downto 0); -- b
-    signal alu_out   : std_logic_vector(label_size - 1 downto 0); -- add or sub
-    signal alu_sel   : std_logic;
-    signal alu_cin   : std_logic;
-    signal alu_cout  : std_logic;
+    signal alu_inp1  : std_logic_vector(label_size - 1 downto 0) := (others => '0'); -- a
+    signal alu_inp2	 : std_logic_vector(label_size - 1 downto 0) := (others => '0'); -- b
+    signal alu_out   : std_logic_vector(label_size - 1 downto 0) := (others => '0'); -- add or sub
+    signal alu_sel   : std_logic := '0';
+    signal alu_cin   : std_logic := '0';
+    signal alu_cout  : std_logic := '0';
     signal cnt       : std_logic := '0';
     
     -- begin masterpieces :v
@@ -85,12 +85,12 @@ begin
                     -- fetch number of neurons.
                     if( cnt = '0' ) then
                         cnt <= '1';
-                        bus_left <= address;
+                        bus_left(address_size-1 downto 0) <= address;
                         enable_mar_in <= '1';
                         next_state <= fetch_num_neuron;
                         
                         -- alu to increment the address to get next fetch
-                        alu_inp1 <= null_vec(label_size -1 downto ram_size)&address;
+                        alu_inp1 <= null_vec(label_size -1 downto address_size)&address;
                         alu_inp2 <= (others=>'0');
                         alu_inp2(0) <= '1';
                         alu_cin <= '0';
@@ -101,7 +101,7 @@ begin
                         cnt <= '0';
                         enable_mdr_in <= '1';   
                         enable_mdr_out <= '1';
-                        num <= bus_right;
+                        num <= bus_right(label_size - 1 downto 0 );
                         next_state <= prepare_labels;
                     end if;
                 ------------------------------------------------------------------------------------
@@ -109,12 +109,12 @@ begin
                     -- prepare label registers.
                     if( cnt = '0' ) then
                         cnt <= '1';
-                        bus_left <= address;
+                        bus_left(address_size-1 downto 0) <= address;
                         enable_mar_in <= '1';
                         next_state <= prepare_labels;
                             
                         -- alu to increment the address to get next fetch
-                        alu_inp1 <= null_vec(label_size -1 downto ram_size)&address;
+                        alu_inp1 <= null_vec(label_size -1 downto address_size)&address;
                         alu_inp2 <= (others=>'0');
                         alu_inp2(0) <= '1';
                         alu_cin <= '0';
@@ -135,11 +135,11 @@ begin
                         next_state <= idle;
                     elsif(ready_signal = '0') then
                         -- prepare neuron register.
-                        bus_left <= address;
+                        bus_left(address_size-1 downto 0) <= address;
                         enable_mar_in <= '1';
 
                         -- alu to increment the address to get next fetch
-                        alu_inp1 <= null_vec(label_size -1 downto ram_size)&address;
+                        alu_inp1 <= null_vec(label_size -1 downto address_size)&address;
                         alu_inp2 <= (others=>'0');
                         alu_inp2(0) <= '1';
                         alu_cin <= '0';
@@ -153,7 +153,7 @@ begin
                     ready_signal <= '1';
                     
                     -- alu to decrement number of neurons
-                    alu_inp1 <= null_vec(label_size -1 downto ram_size)&address;
+                    alu_inp1 <= null_vec(label_size -1 downto address_size)&address;
                     alu_inp2 <= (others=>'0');
                     alu_inp2(0) <= '1';
                     alu_cin <= '0';
