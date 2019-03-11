@@ -14,22 +14,24 @@ entity controller is
         clk_inv        : in    std_logic; 
         rst            : in    std_logic;
         initiate       : inout std_logic;
-        ready_signal   : inout   std_logic;   
-        bus_left       : inout std_logic_vector(n-1 downto 0);
-        bus_right      : inout std_logic_vector(n-1 downto 0)
+        ready_signal   : inout std_logic;
+        bi_bus         : inout std_logic_vector(n-1 downto 0)
     );
 end entity controller;
 
 architecture a_controller of controller is
 
     constant null_vec : std_logic_vector(n-1 downto 0) := (others => '0');
-    type state_type is ( idle , fetch_num_neuron ,  prepare_labels , fetch_neuron_weights , ready ); -- our fsm.    
 
+    type state_type is ( idle , fetch_num_neuron ,  prepare_labels , fetch_neuron_weights , ready ); -- our fsm.    
     -- idle : state that make the fsm waiting to begin.
     -- prepare_labels : state to prepare bias registers with initial values ( latched from memory in specific location ).
     -- fetch_neuron : state to fetch neuron from the memory.
     -- fetch_weights : state to fetch all weight (note: the weights will be on mdr all the time).
     -- ready : state whose job is to rise a signal to booth's algorithm to start multipication.
+
+    type sub_state_type is ( sub_state_1 , sub_state_2 , sub_state_3 , sub_state_4 , sub_state_5 );
+
 
     signal enable_decoder_src     : std_logic := '0'; -- enable the source decoder.
     signal enable_decoder_dst     : std_logic := '0'; -- enable the destination decoder.
@@ -45,7 +47,7 @@ architecture a_controller of controller is
     signal next_num : std_logic_vector( label_size - 1 downto 0 ) := (others => '0'); -- temp number of neurons to be decremented.
     
     signal state : state_type := idle;      -- main signal of fsm ( this is the main state ).
-    signal next_state : state_type := idle; -- signal to avoid infinite loop.
+    signal sub_state : sub_state_type := sub_state_1; -- signal to avoid infinite loop.
     
     signal address : std_logic_vector(address_size - 1 downto 0) := (others => '0'); -- address of (num of neurons).
     signal next_address : std_logic_vector(address_size - 1 downto 0) := (others => '0'); -- temp address to be incremented after each state of fetch neuron
@@ -56,121 +58,62 @@ architecture a_controller of controller is
     signal alu_sel   : std_logic := '0';
     signal alu_cin   : std_logic := '0';
     signal alu_cout  : std_logic := '0';
-    signal cnt       : std_logic := '0';
     
     -- begin masterpieces :v
 
 begin
-    process(clk , state)
-    begin     
-        enable_mar_in <= '0'; 
-        enable_write <= '0'; 
-        enable_decoder_src <= '0';
-        enable_decoder_dst <= '0';
-        enable_mdr_in <= '0';
-        enable_mdr_out <= '0'; 
-        sel_src <= "0000";
-        sel_dst <= "0000"; 
-                
-        if (rising_edge(clk) and initiate = '1') then
-            ready_signal <= '0';
-            initiate <= '0';
-            next_state <= fetch_num_neuron;
+    process( clk )
+    begin
+        if (rising_edge(clk)) then
+            
+            if(initiate = '1') then
+                ready_signal <= '0'; initiate <= '0';
+                state <= fetch_num_neuron;          
+            else
+                case(state) is
 
-        elsif (rising_edge(clk)) then
+                    when fetch_num_neuron =>
+                       
+                        case(sub_state) is
+                            when sub_state_1 =>
+                                sel_src <= "0000";          sel_dst <= "0000"; 
+                                enable_mar_in <= '0';       enable_write <= '0'; 
+                                enable_mdr_in <= '0';       enable_mdr_out <= '0'; 
+                                enable_decoder_src <= '0';  enable_decoder_dst <= '0';
+                                sub_state <= sub_state_2;
+                            when sub_state_2 => 
+                                sub_state <= sub_state_3;
+                                bi_bus(address_size - 1 downto 0) <= address;
+                                enable_mar_in <= '1';
+                                enable_mdr_in <= '1';
+                            when sub_state_3 =>
+                                sub_state <= sub_state_4;
+                                alu_inp1 <= null_vec(label_size -1 downto address_size)&address;
+                                alu_inp2 <= null_vec(label_size -1 downto 1)&'1';
+                                alu_sel <= '0';
+                                enable_mar_in <= '0';
+                            when sub_state_4 =>
+                                sub_state <= sub_state_5;
+                                enable_mdr_out <= '1';
+                                address <= alu_out;
+                                enable_mdr_in <= '0';
+                            when sub_state_5 =>
+                                sub_state <= sub_state_1;
+                                num <= bi_bus(label_size - 1 downto 0 );
+                                state <= prepare_labels;
+                                enable_mdr_out <= '0';
+                        end case ;
 
-            case( state ) is
-                ------------------------------------------------------------------------------------
-                when fetch_num_neuron =>
-                    -- fetch number of neurons.
-                    if( cnt = '0' ) then
-                        cnt <= '1';
-                        bus_left(address_size-1 downto 0) <= address;
-                        enable_mar_in <= '1';
-                        next_state <= fetch_num_neuron;
-                        
-                        -- alu to increment the address to get next fetch
-                        alu_inp1 <= null_vec(label_size -1 downto address_size)&address;
-                        alu_inp2 <= (others=>'0');
-                        alu_inp2(0) <= '1';
-                        alu_cin <= '0';
-                        alu_sel <= '0';
-                        next_address <= alu_out;
-                        
-                    elsif cnt = '1' then
-                        cnt <= '0';
-                        enable_mdr_in <= '1';   
-                        enable_mdr_out <= '1';
-                        num <= bus_right(label_size - 1 downto 0 );
-                        next_state <= prepare_labels;
-                    end if;
-                ------------------------------------------------------------------------------------
-                when prepare_labels =>
-                    -- prepare label registers.
-                    if( cnt = '0' ) then
-                        cnt <= '1';
-                        bus_left(address_size-1 downto 0) <= address;
-                        enable_mar_in <= '1';
-                        next_state <= prepare_labels;
-                            
-                        -- alu to increment the address to get next fetch
-                        alu_inp1 <= null_vec(label_size -1 downto address_size)&address;
-                        alu_inp2 <= (others=>'0');
-                        alu_inp2(0) <= '1';
-                        alu_cin <= '0';
-                        alu_sel <= '0';
-                        next_address <= alu_out;
+                    when others =>
 
-                    elsif cnt = '1' then
-                        cnt <= '0';
-                        enable_mdr_in <= '1'; 
-                        enable_mdr_out <= '1';
-                        enable_decoder_dst <= '1';
-                        sel_dst <= "1111";
-                        next_state <= fetch_neuron_weights;
-                    end if;
-                ------------------------------------------------------------------------------------
-                when fetch_neuron_weights =>
-                    if(num = null_vec) then
-                        next_state <= idle;
-                    elsif(ready_signal = '0') then
-                        -- prepare neuron register.
-                        bus_left(address_size-1 downto 0) <= address;
-                        enable_mar_in <= '1';
+                end case ;
 
-                        -- alu to increment the address to get next fetch
-                        alu_inp1 <= null_vec(label_size -1 downto address_size)&address;
-                        alu_inp2 <= (others=>'0');
-                        alu_inp2(0) <= '1';
-                        alu_cin <= '0';
-                        alu_sel <= '0';
-                        next_address <= alu_out;
-                        next_state <= ready;
-                    end if;
-                ------------------------------------------------------------------------------------
-                when ready =>
-                    -- rise a signal to booth's algorithm to start multipication.
-                    ready_signal <= '1';
-                    
-                    -- alu to decrement number of neurons
-                    alu_inp1 <= null_vec(label_size -1 downto address_size)&address;
-                    alu_inp2 <= (others=>'0');
-                    alu_inp2(0) <= '1';
-                    alu_cin <= '0';
-                    alu_sel <= '1';
-                    next_num <= alu_out;
-                    next_state <= fetch_neuron_weights;
-                when others =>
-                    next_state <= idle;
-                    
-            end case ;
-	    end if ;
-    end process;
-    state <= next_state;
-    num <= next_num;
-    address <= next_address;
-    -- ics
-    specialregfile : entity work.special_register_file generic map ( n , ram_size , address_size ) port map ( clk , enable_mar_in , enable_mdr_in ,  enable_mdr_out ,  enable_write , rst ,  clk_inv, bus_left , bus_right );
-    labelsregfile  : entity work.label_register_file generic map ( n ) port map ( clk , rst , enable_decoder_src , enable_decoder_dst , sel_src, sel_dst , bus_left , bus_right );
+            
+            end if;
+        
+        end if ;
+    end process ; 
+    specialregfile : entity work.special_register_file generic map ( n , ram_size , address_size ) port map ( clk , clk_inv , rst ,  enable_mar_in , enable_mdr_in , enable_mdr_out , enable_write , bi_bus );
+    labelsregfile  : entity work.label_register_file generic map ( n ) port map ( clk , rst , enable_decoder_src , enable_decoder_dst , sel_src, sel_dst , bi_bus );
     alu_subtractor_adder : entity work.alu generic map ( label_size ) port map ( alu_inp1 , alu_inp2 , alu_sel , alu_cin , alu_out , alu_cout );
 end a_controller;

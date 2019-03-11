@@ -12,6 +12,5 @@ end tri_state;
 
 architecture a_tri_state of tri_state is
 begin
-    tri_output <= tri_input when (tri_enable = '1') 
-                  else (others => 'Z');
+    tri_output <= tri_input when (tri_enable = '1') else (others => 'Z');
 end a_tri_state;
