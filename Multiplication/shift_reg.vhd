@@ -32,4 +32,5 @@ count(n-1 downto 0) <= o(n-2 downto 0) &'0';
  en <= '1';            
 end if;
 end process;
+output<=o;
 end my_shift_reg;

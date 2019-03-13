@@ -13,7 +13,8 @@ signal unused_cout : std_logic;
 signal O : std_logic_vector(n-1 downto 0);
 begin 
 second_operand<= a when (p(1)='0' and p(0)='1')
-else s when (p(1)='1' and p(0)='0');
+else s when (p(1)='1' and p(0)='0')
+else (second_operand'length-1 downto 0 =>'0');
 add_n:  entity work.nadder GENERIC MAP (n) port map (P ,second_operand,'0',O,unused_cout);  
-Output(16 downto 0) <= O(16)&O(16 downto 1);                    
+Output(n-1 downto 0) <= O(n-1)&O(n-1 downto 1);                    
 end my_compare_add_sub;
