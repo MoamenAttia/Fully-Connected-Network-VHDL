@@ -1,18 +1,33 @@
-vsim work.controller
-# vsim work.controller 
-# Start time: 19:28:07 on Mar 08,2019
-# Loading std.standard
-# Loading std.textio(body)
-# Loading ieee.std_logic_1164(body)
-# Loading ieee.numeric_std(body)
-# Loading ieee.math_real(body)
-# Loading work.controller(a_controller)
-add wave -position insertpoint  \
-sim:/controller/clk \
-sim:/controller/readySignal \
-sim:/controller/state \
-sim:/controller/next_state
-add wave -position insertpoint  \
-sim:/controller/initiate
-force -freeze sim:/controller/initiate 0 0
+mem load -filltype value -filldata AAAAAA -fillradix hexadecimal /controller/specialregfile/my_ram/my_ram(0)
+mem load -filltype value -filldata AAAAAABBBBBBCCCCCCDDDDD -fillradix hexadecimal /controller/specialregfile/my_ram/my_ram(1)
+mem load -filltype value -filldata AAAAAA000000000000 -fillradix hexadecimal /controller/specialregfile/my_ram/my_ram(2)
+mem load -filltype value -filldata BBBBBB000000000000 -fillradix hexadecimal /controller/specialregfile/my_ram/my_ram(3)
+mem load -filltype value -filldata CCCCCC000000000000 -fillradix hexadecimal /controller/specialregfile/my_ram/my_ram(4)
+mem load -filltype value -filldata DDDDDD000000000000 -fillradix hexadecimal /controller/specialregfile/my_ram/my_ram(5)
+mem load -filltype value -filldata EEEEEE000000000000 -fillradix hexadecimal /controller/specialregfile/my_ram/my_ram(6)
+mem load -filltype value -filldata FFFFFF000000000000 -fillradix hexadecimal /controller/specialregfile/my_ram/my_ram(7)
+mem load -filltype value -filldata EEEEEEAAAAAA000000 -fillradix hexadecimal /controller/specialregfile/my_ram/my_ram(8)
+mem load -filltype value -filldata EEEEEEAAAAAA000000 -fillradix hexadecimal /controller/specialregfile/my_ram/my_ram(9)
+mem load -filltype value -filldata EEEEEE000000AAAAA0 -fillradix hexadecimal /controller/specialregfile/my_ram/my_ram(10)
+mem load -filltype value -filldata EEEEEE0000000BBBBB -fillradix hexadecimal /controller/specialregfile/my_ram/my_ram(11)
+mem load -filltype value -filldata EEEEEE00000CCCCCC0 -fillradix hexadecimal /controller/specialregfile/my_ram/my_ram(12)
+mem load -filltype value -filldata EEEEEE00EEEEEE0000 -fillradix hexadecimal /controller/specialregfile/my_ram/my_ram(13)
+mem load -filltype value -filldata EEEEEE0FFFFFFF0000 -fillradix hexadecimal /controller/specialregfile/my_ram/my_ram(14)
+mem load -filltype value -filldata EEEEEE00000000DDDD -fillradix hexadecimal /controller/specialregfile/my_ram/my_ram(15)
+
+# add wave -position insertpoint sim:/controller/*
 force -freeze sim:/controller/clk 0 0, 1 {50 ps} -r 100
+force -freeze sim:/controller/clk_inv 1 0, 0 {50 ps} -r 100
+force -freeze sim:/controller/rst 1 0
+force -freeze sim:/controller/initiate 1 0
+run
+# ** Warning: NUMERIC_STD.TO_INTEGER: metavalue detected, returning 0
+#    Time: 0 ps  Iteration: 0  Instance: /controller/specialregfile/my_ram
+noforce sim:/controller/initiate
+force -freeze sim:/controller/rst 0 0
+run
+run
+run
+run
+run
+run

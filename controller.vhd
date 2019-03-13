@@ -71,9 +71,7 @@ begin
                 state <= fetch_num_neuron;          
             else
                 case(state) is
-
                     when fetch_num_neuron =>
-                       
                         case(sub_state) is
                             when sub_state_1 =>
                                 sel_src <= "0000";          sel_dst <= "0000"; 
@@ -91,6 +89,7 @@ begin
                                 alu_inp1 <= null_vec(label_size -1 downto address_size)&address;
                                 alu_inp2 <= null_vec(label_size -1 downto 1)&'1';
                                 alu_sel <= '0';
+                                bi_bus <= (others => 'Z');
                                 enable_mar_in <= '0';
                             when sub_state_4 =>
                                 sub_state <= sub_state_5;
@@ -104,13 +103,98 @@ begin
                                 enable_mdr_out <= '0';
                         end case ;
 
-                    when others =>
+                    when prepare_labels =>
 
+                        case(sub_state) is
+                            when sub_state_1 =>
+                                sel_src <= "0000";          sel_dst <= "0000"; 
+                                enable_mar_in <= '0';       enable_write <= '0'; 
+                                enable_mdr_in <= '0';       enable_mdr_out <= '0'; 
+                                enable_decoder_src <= '0';  enable_decoder_dst <= '0';
+                                bi_bus <= (others => 'Z');
+                                sub_state <= sub_state_2;
+                            when sub_state_2 => 
+                                sub_state <= sub_state_3;
+                                bi_bus(address_size - 1 downto 0) <= address;
+                                enable_mar_in <= '1';
+                                enable_mdr_in <= '1';
+                            when sub_state_3 =>
+                                sub_state <= sub_state_4;
+                                alu_inp1 <= null_vec(label_size -1 downto address_size)&address;
+                                alu_inp2 <= null_vec(label_size -1 downto 1)&'1';
+                                alu_sel <= '0';
+                                bi_bus <= (others => 'Z');
+                                enable_mar_in <= '0';
+                            when sub_state_4 =>
+                                sub_state <= sub_state_5;
+                                enable_mdr_out <= '1';
+                                address <= alu_out;
+                                enable_mdr_in <= '0';
+                                enable_decoder_dst <= '1';
+                                sel_dst <= "1111";
+                            when sub_state_5 =>
+                                sub_state <= sub_state_1;
+                                state <= fetch_neuron_weights;
+                                enable_mdr_out <= '0';
+                                enable_decoder_dst <= '0';
+                                sel_dst <= "0000";
+                        end case ;
+                    
+                    when fetch_neuron_weights =>
+                        -- here all neurons are done and I'm waiting for another initiate signal.
+                        if(num = null_vec) then
+                            state <= idle;
+                        end if;
+                        -- if ready_signal is equal to zero this means booths needs more.
+                        if ready_signal = '0' then
+                            case(sub_state) is
+                                when sub_state_1 =>
+                                    sel_src <= "0000";          sel_dst <= "0000"; 
+                                    enable_mar_in <= '0';       enable_write <= '0'; 
+                                    enable_mdr_in <= '0';       enable_mdr_out <= '0'; 
+                                    enable_decoder_src <= '0';  enable_decoder_dst <= '0';
+                                    bi_bus <= (others => 'Z');
+                                    ready_signal <= '0';
+                                    sub_state <= sub_state_2;
+                                when sub_state_2 => 
+                                    sub_state <= sub_state_3;
+                                    bi_bus(address_size - 1 downto 0) <= address;
+                                    enable_mar_in <= '1';
+                                    enable_mdr_in <= '1';
+                                    alu_inp1 <= null_vec(label_size -1 downto address_size)&address;
+                                    alu_inp2 <= null_vec(label_size -1 downto 1)&'1';
+                                    alu_sel <= '0';
+                                when others =>
+                                    state <= ready;
+                                    sub_state <= sub_state_1;
+                                    address <= alu_out;
+                                    enable_mar_in <= '0';
+                                    enable_mdr_in <= '0';
+                            end case ;    
+                        end if ;
+                    when ready =>
+                        case( sub_state ) is
+                            when sub_state_1 =>
+                                sel_src <= "0000";          sel_dst <= "0000"; 
+                                enable_mar_in <= '0';       enable_write <= '0'; 
+                                enable_mdr_in <= '0';       enable_mdr_out <= '0'; 
+                                enable_decoder_src <= '0';  enable_decoder_dst <= '0';
+                                bi_bus <= (others => 'Z');
+                                alu_inp1 <= null_vec(label_size -1 downto ram_size)&address;
+                                alu_inp2 <= null_vec(label_size -1 downto 1)&'1';
+                                alu_cin <= '0'; 
+                                alu_sel <= '1';
+                                sub_state <= sub_state_2;
+                            when others =>
+                                num <= alu_out;
+                                ready_signal <= '1';
+                                state <= fetch_neuron_weights;
+                                sub_state <= sub_state_1;
+                        end case;         
+                    when idle => 
+                        state <= fetch_neuron_weights;
                 end case ;
-
-            
             end if;
-        
         end if ;
     end process ; 
     specialregfile : entity work.special_register_file generic map ( n , ram_size , address_size ) port map ( clk , clk_inv , rst ,  enable_mar_in , enable_mdr_in , enable_mdr_out , enable_write , bi_bus );
