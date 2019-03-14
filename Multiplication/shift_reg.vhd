@@ -27,7 +27,7 @@ count <= (others =>'0');
 count(0) <='1';
 en <= '1';
 
-elsif  rising_edge(clk) then
+elsif  rising_edge(clk) and  o(n-1) = '0' then
 count(n-1 downto 0) <= o(n-2 downto 0) &'0';
  en <= '1';            
 end if;
