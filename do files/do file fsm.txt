@@ -1,3 +1,7 @@
+vsim work.controller
+add wave -position insertpoint sim:/controller/*
+add wave -position insertpoint sim:/controller/specialregfile/*
+add wave -position insertpoint sim:/controller/labelsregfile/*
 mem load -filltype value -filldata AAAAAA -fillradix hexadecimal /controller/specialregfile/my_ram/my_ram(0)
 mem load -filltype value -filldata AAAAAABBBBBBCCCCCCDDDDD -fillradix hexadecimal /controller/specialregfile/my_ram/my_ram(1)
 mem load -filltype value -filldata AAAAAA000000000000 -fillradix hexadecimal /controller/specialregfile/my_ram/my_ram(2)
