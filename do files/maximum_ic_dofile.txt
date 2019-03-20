@@ -7,10 +7,10 @@ force -freeze sim:/maximum_ic/label2_out  22 0
 force -freeze sim:/maximum_ic/label3_out  3 0
 force -freeze sim:/maximum_ic/label4_out  4 0
 force -freeze sim:/maximum_ic/label5_out  5 0
-force -freeze sim:/maximum_ic/label6_out  6 0
-force -freeze sim:/maximum_ic/label7_out  7 0
-force -freeze sim:/maximum_ic/label7_out  8 0
-force -freeze sim:/maximum_ic/label8_out  9 0
+force -freeze sim:/maximum_ic/label6_out  0116 0
+force -freeze sim:/maximum_ic/label7_out  1101 0
+force -freeze sim:/maximum_ic/label7_out  0111 0
+force -freeze sim:/maximum_ic/label8_out  AAAA 0
 force -freeze sim:/maximum_ic/label9_out  FFFF 0
 force -freeze sim:/maximum_ic/label10_out 11 0
 run
