@@ -20,7 +20,7 @@ architecture a_ram of ram is
 begin
     process(clk)
         begin
-            if rising_edge(clk) then
+            if (clk'event and clk = '1') then
                 if enable_write = '1' then
                     my_ram(to_integer(unsigned(address))) <= data_in;
                 end if;

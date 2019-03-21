@@ -17,8 +17,10 @@ Architecture a_Dff of Dff is
       Begin
         if(rst = '1') then
            q <= '0';
-        elsif rising_edge(clk) and en = '1' then     
-          q <= d;
+        elsif (clk'event and clk = '1') then
+          if en = '1' then     
+            q <= d;
+          end if;
         End if;
     End process;
 End a_Dff;

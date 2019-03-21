@@ -64,7 +64,7 @@ architecture a_controller of controller is
 begin
     process( clk )
     begin
-        if (rising_edge(clk)) then
+        if (clk'event and clk = '1') then
             
             if(initiate = '1') then
                 ready_signal <= '0'; initiate <= '0';
