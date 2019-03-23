@@ -22,14 +22,18 @@ begin
 process(clk,set)
 begin
 
-if set = '1' then 
+if set = '0' then 
 count <= (others =>'0');
 count(0) <='1';
 en <= '1';
 
-elsif  rising_edge(clk) and  o(n-1) = '0' then
-count(n-1 downto 0) <= o(n-2 downto 0) &'0';
- en <= '1';            
+elsif clk'event then 
+  if clk = '1'then 
+	if o(n-1) = '0' then
+		count(n-1 downto 0) <= o(n-2 downto 0) &'0';
+ 		en <= '1'; 
+	end if;           
+  end if;
 end if;
 end process;
 output<=o;

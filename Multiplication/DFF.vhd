@@ -11,8 +11,12 @@ BEGIN
 
 IF(rst = '1') THEN
         q <= '0';
-ELSIF falling_edge(clk) and en = '1'  THEN     
+ELSIF clk'event  then 
+  if clk ='0' then 
+	IF en = '1'  THEN     
  	    q <= d;
+	end if;
+  end if;
 END IF;
 END PROCESS;
 END a_my_DFF;
