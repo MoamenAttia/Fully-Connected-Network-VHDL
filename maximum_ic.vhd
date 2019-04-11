@@ -23,129 +23,224 @@ end entity maximum_ic;
 
 architecture a_maximum_ic of maximum_ic is
   
-  type state_type is ( idle , state_1 , state_2 , state_3 , state_4 , state_5, state_6 , state_7 , state_8 , state_9 , state_10 );
+  type state_type is ( idle , state_1 , state_2 , state_3 , state_4 , state_5 , state_6 , state_7 , state_8 );
   signal state : state_type := idle; 
 
-  signal alu_inp1  : std_logic_vector(15 downto 0) := (others => '0'); -- a
-  signal alu_inp2	 : std_logic_vector(15 downto 0) := (others => '0'); -- b
-  signal alu_out   : std_logic_vector(15 downto 0) := (others => '0'); -- add or sub
-  signal alu_sel   : std_logic := '0';
-  signal alu_cin   : std_logic := '0';
-  signal alu_cout  : std_logic := '0';
+  
+  -- First Comparator
+  signal comparator_first_inp1     : std_logic_vector(15 downto 0) := (others => '0');
+  signal comparator_first_inp2	   : std_logic_vector(15 downto 0) := (others => '0');
+  signal comparator_first_output   : std_logic_vector(15 downto 0) := (others => '0');
 
+  -- Second Comparator
+  signal comparator_second_inp1    : std_logic_vector(15 downto 0) := (others => '0');
+  signal comparator_second_inp2	   : std_logic_vector(15 downto 0) := (others => '0');
+  signal comparator_second_output  : std_logic_vector(15 downto 0) := (others => '0');
+  
+  -- Third Comparator
+  signal comparator_third_inp1     : std_logic_vector(15 downto 0) := (others => '0');
+  signal comparator_third_inp2	   : std_logic_vector(15 downto 0) := (others => '0');
+  signal comparator_third_output   : std_logic_vector(15 downto 0) := (others => '0');
+  
+  -- Forth Comparator
+  signal comparator_fourth_inp1    : std_logic_vector(15 downto 0) := (others => '0');
+  signal comparator_fourth_inp2	   : std_logic_vector(15 downto 0) := (others => '0');
+  signal comparator_fourth_output  : std_logic_vector(15 downto 0) := (others => '0');
+  
+  -- Fifth Comparator
+  signal comparator_fifth_inp1     : std_logic_vector(15 downto 0) := (others => '0');
+  signal comparator_fifth_inp2	   : std_logic_vector(15 downto 0) := (others => '0');
+  signal comparator_fifth_output   : std_logic_vector(15 downto 0) := (others => '0');
+  
+
+  -- answers signals
+  signal ans1 : std_logic_vector(15 downto 0) := (others => '0');
+  signal ans2 : std_logic_vector(15 downto 0) := (others => '0');
+  signal ans3 : std_logic_vector(15 downto 0) := (others => '0');
+  signal ans4 : std_logic_vector(15 downto 0) := (others => '0');
+  signal ans5 : std_logic_vector(15 downto 0) := (others => '0');
+  signal ans6 : std_logic_vector(15 downto 0) := (others => '0');
+  signal ans7 : std_logic_vector(15 downto 0) := (others => '0');
+  signal ans8 : std_logic_vector(15 downto 0) := (others => '0');
+  
   begin
     process(clk)
     begin
-      if(rising_edge(clk)) then
-        if (start_comp = '0' and not(state = idle)) then
-          case state is
-            when state_1 =>
-              alu_inp1 <= answer;
-              alu_inp2 <= label1_out;
-              alu_sel <= '1';
-            when state_2 =>
-              alu_inp1 <= answer;
-              alu_inp2 <= label2_out;
-              alu_sel <= '1';
-            when state_3 =>  
-              alu_inp1 <= answer;
-              alu_inp2 <= label3_out;
-              alu_sel <= '1';
-            when state_4 =>
-              alu_inp1 <= answer;
-              alu_inp2 <= label4_out;
-              alu_sel <= '1';   
-            when state_5 =>
-              alu_inp1 <= answer;
-              alu_inp2 <= label5_out;
-              alu_sel <= '1';
-            when state_6 =>
-              alu_inp1 <= answer;
-              alu_inp2 <= label6_out;
-              alu_sel <= '1';
-            when state_7 =>
-              alu_inp1 <= answer;
-              alu_inp2 <= label7_out;
-              alu_sel <= '1';
-            when state_8 =>
-              alu_inp1 <= answer;
-              alu_inp2 <= label8_out;
-              alu_sel <= '1';
-            when state_9 =>
-              alu_inp1 <= answer;
-              alu_inp2 <= label9_out;
-              alu_sel <= '1';
-            when state_10 =>
-              alu_inp1 <= answer;
-              alu_inp2 <= label10_out;
-              alu_sel <= '1';
-            when others =>
-                state <= idle;
-          end case;
-        end if;
-      elsif falling_edge(clk) then
+      if(clk'event and clk='1') then
         if start_comp = '1' then
-          start_comp <= '0'; state <= state_1;
+          start_comp <= '0';
           done_comp <= '0';
           answer <= (others => '0');
-        elsif (start_comp = '0' and not(state = idle)) then
+          state <= state_1;
+        elsif (start_comp = '0') then
           case state is
             when state_1 =>
-              if(alu_out(15) = '1') then
-                answer <= label1_out;
-              end if;
+              -- First Comparator Ports
+              comparator_first_inp1 <= label1_out;
+              comparator_first_inp2 <= label2_out;
+
+              -- Second Comparator Ports
+              comparator_second_inp1 <= label3_out;
+              comparator_second_inp2 <= label4_out;
+
+              -- Third Comparator Ports
+              comparator_third_inp1 <= label5_out;
+              comparator_third_inp2 <= label6_out;
+
+              -- Forth Comparator Ports
+              comparator_fourth_inp1 <= label7_out;
+              comparator_fourth_inp2 <= label8_out;
+
+              -- Fifth Comparator Ports
+              comparator_fifth_inp1 <= label9_out;
+              comparator_fifth_inp2 <= label10_out;
+              
+              -- state = next_state
               state <= state_2;
+
             when state_2 =>
-              if(alu_out(15) = '1') then
-                answer <= label2_out;
-              end if;
+              ans1 <= comparator_first_output;
+              ans2 <= comparator_second_output;
+              ans3 <= comparator_third_output;
+              ans4 <= comparator_fourth_output;
+              ans5 <= comparator_fifth_output;
               state <= state_3;
-            when state_3 =>  
-              if(alu_out(15) = '1') then
-                answer <= label3_out;
-              end if;
-              state <= state_4;       
+
+            when state_3 =>
+              -- First Comparator Ports
+              comparator_first_inp1 <= ans1;
+              comparator_first_inp2 <= ans2;
+
+              -- Second Comparator Ports
+              comparator_second_inp1 <= ans3;
+              comparator_second_inp2 <= ans4;
+
+              -- Third Comparator Ports
+              comparator_third_inp1 <= (others => '0');
+              comparator_third_inp2 <= (others => '0');
+
+              -- Forth Comparator Ports
+              comparator_fourth_inp1 <= (others => '0');
+              comparator_fourth_inp2 <= (others => '0');
+
+              -- Fifth Comparator Ports
+              comparator_fifth_inp1 <= label9_out;
+              comparator_fifth_inp2 <= label10_out;
+
+              -- state = next_state
+              state <= state_4;
+            
             when state_4 =>
-              if(alu_out(15) = '1') then
-                answer <= label4_out;
-              end if;
-              state <= state_5;   
+              
+              ans6 <= comparator_first_output;
+              ans7 <= comparator_second_output;
+              ans3 <= (others => '0');
+              ans4 <= (others => '0');
+              ans5 <= comparator_fifth_output;
+              state <= state_5;
+            
             when state_5 =>
-              if(alu_out(15) = '1') then
-                answer <= label5_out;
-              end if;
+              -- First Comparator Ports
+              comparator_first_inp1 <= ans6;
+              comparator_first_inp2 <= ans7;
+
+              -- Second Comparator Ports
+              comparator_second_inp1 <= (others => '0');
+              comparator_second_inp2 <= (others => '0');
+
+              -- Third Comparator Ports
+              comparator_third_inp1 <= (others => '0');
+              comparator_third_inp2 <= (others => '0');
+
+              -- Forth Comparator Ports
+              comparator_fourth_inp1 <= (others => '0');
+              comparator_fourth_inp2 <= (others => '0');
+
+              -- Fifth Comparator Ports
+              comparator_fifth_inp1 <= label9_out;
+              comparator_fifth_inp2 <= label10_out;
+
+              -- state = next_state
               state <= state_6;
+            
             when state_6 =>
-              if(alu_out(15) = '1') then
-                answer <= label6_out;
-              end if;
+              ans8 <= comparator_first_output;
+              ans5 <= comparator_fifth_output;
               state <= state_7;
+
             when state_7 =>
-              if(alu_out(15) = '1') then
-                answer <= label7_out;
-              end if;
-              state <= state_8;
+               -- First Comparator Ports
+               comparator_first_inp1 <= ans5;
+               comparator_first_inp2 <= ans8;
+ 
+               -- Second Comparator Ports
+               comparator_second_inp1 <= (others => '0');
+               comparator_second_inp2 <= (others => '0');
+ 
+               -- Third Comparator Ports
+               comparator_third_inp1 <= (others => '0');
+               comparator_third_inp2 <= (others => '0');
+ 
+               -- Forth Comparator Ports
+               comparator_fourth_inp1 <= (others => '0');
+               comparator_fourth_inp2 <= (others => '0');
+ 
+               -- Fifth Comparator Ports
+               comparator_fifth_inp1 <= (others => '0');
+               comparator_fifth_inp2 <= (others => '0');
+               
+               -- state = next_state
+               state <= state_8;
+               
             when state_8 =>
-              if(alu_out(15) = '1') then
-                answer <= label8_out;
-              end if;
-              state <= state_9;
-            when state_9 =>
-              if(alu_out(15) = '1') then
-                answer <= label9_out;
-              end if;
-              state <= state_10;
-            when state_10 =>
-              if(alu_out(15) = '1') then
-                answer <= label10_out;
-              end if;
-              state <= idle;
+              answer <= comparator_first_output;
               done_comp <= '1';
+              state <= idle;
             when others =>
-                state <= idle;
-          end case;
-        end if;   
-      end if ;
+              state <= idle;
+            end case;
+        end if;
+      end if;      
     end process;
-    alu_subtractor_adder : entity work.alu generic map ( 16 ) port map ( alu_inp1 , alu_inp2 , alu_sel , alu_cin , alu_out , alu_cout );
-end a_maximum_ic;
+
+    comparator_1: 
+    entity work.comparator
+    port map ( 
+      comparator_inp_1  => comparator_first_inp1,
+      comparator_inp_2  => comparator_first_inp2,
+      comparator_output => comparator_first_output
+    );
+
+    comparator_2: 
+    entity work.comparator
+    port map ( 
+      comparator_inp_1  => comparator_second_inp1,
+      comparator_inp_2  => comparator_second_inp2,
+      comparator_output => comparator_second_output
+    );
+
+    comparator_3: 
+    entity work.comparator
+    port map ( 
+      comparator_inp_1  => comparator_third_inp1,
+      comparator_inp_2  => comparator_third_inp2,
+      comparator_output => comparator_third_output
+    );
+
+    comparator_4: 
+    entity work.comparator
+    port map ( 
+      comparator_inp_1  => comparator_fourth_inp1,
+      comparator_inp_2  => comparator_fourth_inp2,
+      comparator_output => comparator_fourth_output
+    );
+
+    comparator_5: 
+    entity work.comparator
+    port map ( 
+      comparator_inp_1  => comparator_fifth_inp1,
+      comparator_inp_2  => comparator_fifth_inp2,
+      comparator_output => comparator_fifth_output
+    );
+
+end architecture;
