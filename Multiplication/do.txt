@@ -1,0 +1,66 @@
+vsim -gui work.booth_adder_components
+# vsim -gui work.booth_adder_components 
+# Start time: 12:33:30 on Apr 11,2019
+# Loading std.standard
+# Loading std.textio(body)
+# Loading ieee.std_logic_1164(body)
+# Loading ieee.numeric_std(body)
+# Loading ieee.std_logic_arith(body)
+# Loading ieee.std_logic_signed(body)
+# Loading work.booth_adder_components(my_booth_adder_components)
+# Loading work.booth_integration(my_booth_integration)
+# Loading work.twos_complement(my_twos_complement)
+# Loading work.nadder(a_nadder)
+# Loading work.my_adder(a_my_adder)
+# Loading work.shift_reg(my_shift_reg)
+# Loading work.my_ndff(b_my_ndff)
+# Loading work.my_dff(a_my_dff)
+# Loading work.compare_add_sub(my_compare_add_sub)
+# vsim -gui work.booth_adder_components 
+# Start time: 12:26:59 on Apr 11,2019
+# Loading std.standard
+# Loading std.textio(body)
+# Loading ieee.std_logic_1164(body)
+# Loading ieee.numeric_std(body)
+# Loading ieee.std_logic_arith(body)
+# Loading ieee.std_logic_signed(body)
+# Loading work.booth_adder_components(my_booth_adder_components)
+# Loading work.booth_integration(my_booth_integration)
+# Loading work.twos_complement(my_twos_complement)
+# Loading work.nadder(a_nadder)
+# Loading work.my_adder(a_my_adder)
+# Loading work.shift_reg(my_shift_reg)
+# Loading work.my_ndff(b_my_ndff)
+# Loading work.my_dff(a_my_dff)
+# Loading work.compare_add_sub(my_compare_add_sub)
+add wave -position insertpoint sim:/booth_adder_components/*
+force -freeze sim:/booth_adder_components/rst 1 0
+run
+run
+force -freeze sim:/booth_adder_components/clk 1 0, 0 {50 ps} -r 100
+force -freeze sim:/booth_adder_components/rst 0 0
+force -freeze sim:/booth_adder_components/set 0 0
+force -freeze sim:/booth_adder_components/neuron 11110110 0
+force -freeze sim:/booth_adder_components/weight_0 11111101 0
+run
+run
+run
+run
+force -freeze sim:/booth_adder_components/set 1 0
+run
+run
+run
+run
+run
+run
+run
+run
+run
+run
+run
+run
+run
+run
+run
+run
+run
