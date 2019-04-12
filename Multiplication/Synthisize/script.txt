@@ -1,0 +1,36 @@
+load_library tsmc035_typ
+read -technology "tsmc035_typ"  { /home/ayman/Desktop/Multiplication/DFF.vhd }
+read -technology "tsmc035_typ"  { /home/ayman/Desktop/Multiplication/my_nDFF.vhd }
+read -technology "tsmc035_typ"  { /home/ayman/Desktop/Multiplication/onebitadder.vhd }
+read -technology "tsmc035_typ"  { /home/ayman/Desktop/Multiplication/nadder.vhd }
+read -technology "tsmc035_typ"  { /home/ayman/Desktop/Multiplication/Twos_Complement.vhd }
+read -technology "tsmc035_typ"  { /home/ayman/Desktop/Multiplication/shift_reg.vhd }
+read -technology "tsmc035_typ"  { /home/ayman/Desktop/Multiplication/compare_add_sub.vhd }
+read -technology "tsmc035_typ"  { /home/ayman/Desktop/Multiplication/booth_integration.vhd }
+pre_optimize -common_logic -unused_logic -boundary -xor_comparator_optimize 
+pre_optimize -extract 
+elaborate booth_integration -architecture my_booth_integration 
+pre_optimize .work.booth_integration.my_booth_integration -common_logic -unused_logic -boundary -xor_comparator_optimize 
+pre_optimize .work.booth_integration.my_booth_integration -extract 
+set sdf_type combined
+set register2register 22.000000
+set input2register 22.000000
+set register2output 22.000000
+set_clock -name .work.shift_reg_10.my_shift_reg_unfold_2936.nx60 -clock_cycle "22.000000"
+set_clock -name .work.shift_reg_10.my_shift_reg_unfold_2936.nx60 -pulse_width "11.000000"
+--------------------------no changes auto 
+optimize .work.booth_integration.my_booth_integration -target tsmc035_typ -macro -area -effort quick -hierarchy auto 
+optimize_timing .work.booth_integration.my_booth_integration 
+----------------------------------- auto flatten 
+optimize .work.booth_integration.my_booth_integration -target tsmc035_typ -macro -auto -effort standard -hierarchy flatten 
+optimize_timing .work.booth_integration.my_booth_integration 
+
+optimize_timing .work.booth_integration.my_booth_integration -force 
+
+
+report_area /home/ayman/Desktop/area -cell_usage -all_leafs 
+report_delay /home/ayman/Desktop/delay -num_paths 1 -critical_paths -clock_frequency
+
+auto_write -format VHDL /home/ayman/Desktop/booth_Netlist.vhd
+
+auto_write -format SDF /home/ayman/Desktop/booth_Netlist.sdf

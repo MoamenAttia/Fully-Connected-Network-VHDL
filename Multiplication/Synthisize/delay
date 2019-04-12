@@ -1,0 +1,108 @@
+
+
+
+
+
+                        Critical Path Report
+
+
+Critical path #1, (path slack =  1.1):
+
+NAME                                       GATE              ARRIVAL              LOAD
+--------------------------------------------------------------------------------------
+R(3)/                                                  0.00  0.00 dn             0.03
+ix101/Y                                    nor04       0.31  0.31 up             0.02
+ix105/Y                                    nor02ii     0.28  0.58 up             0.02
+ix109/Y                                    nor02ii     0.27  0.85 up             0.02
+ix121/Y                                    nor02ii     0.36  1.21 up             0.03
+ix523/Y                                    inv01       0.11  1.32 dn             0.01
+ix520/Y                                    aoi32       0.51  1.84 up             0.03
+ix133/Y                                    xnor2       0.26  1.64 up             0.04
+ix471/Y                                    xor2        0.38  2.02 dn             0.00
+ix139/Y                                    nor02ii     0.17  2.20 up             0.02
+p_Reg_loop1_14_fx_lat_q_u1/QB              latchr      0.39  2.58 dn             0.01
+p_Reg_loop1_14_fx_lat_q_u2/Y               inv01       0.23  2.81 up             0.03
+ix159/Y                                    xnor2       0.28  3.09 dn             0.04
+ix448/Y                                    xor2        0.49  3.58 up             0.00
+ix165/Y                                    nor02ii     0.12  3.70 dn             0.02
+p_Reg_loop1_13_fx_lat_q_u1/QB              latchr      0.34  4.04 up             0.01
+p_Reg_loop1_13_fx_lat_q_u2/Y               inv01       0.16  4.20 dn             0.03
+ix185/Y                                    xnor2       0.25  4.45 up             0.04
+ix418/Y                                    xor2        0.38  4.83 dn             0.00
+ix191/Y                                    nor02ii     0.17  5.01 up             0.02
+p_Reg_loop1_12_fx_lat_q_u1/QB              latchr      0.39  5.39 dn             0.01
+p_Reg_loop1_12_fx_lat_q_u2/Y               inv01       0.23  5.62 up             0.03
+ix211/Y                                    xnor2       0.28  5.90 dn             0.04
+ix400/Y                                    xor2        0.49  6.39 up             0.00
+ix217/Y                                    nor02ii     0.12  6.51 dn             0.02
+p_Reg_loop1_11_fx_lat_q_u1/QB              latchr      0.34  6.85 up             0.01
+p_Reg_loop1_11_fx_lat_q_u2/Y               inv01       0.16  7.01 dn             0.03
+ix237/Y                                    xnor2       0.25  7.26 up             0.04
+ix384/Y                                    xor2        0.38  7.64 dn             0.00
+ix243/Y                                    nor02ii     0.17  7.82 up             0.02
+p_Reg_loop1_10_fx_lat_q_u1/QB              latchr      0.39  8.20 dn             0.01
+p_Reg_loop1_10_fx_lat_q_u2/Y               inv01       0.23  8.43 up             0.03
+ix265/Y                                    xnor2       0.28  8.70 dn             0.04
+ix370/Y                                    xnor2       0.16  8.86 up             0.00
+ix271/Y                                    nor02ii     0.14  9.00 dn             0.02
+p_Reg_loop1_9_fx_lat_q_u1/QB               latchr      0.34  9.34 up             0.01
+p_Reg_loop1_9_fx_lat_q_u2/Y                inv01       0.15  9.49 dn   (loop)    0.03
+ix277/Y                                    xnor2       0.16  9.65 up             0.01
+ix285/Y                                    mux21_ni    0.30  9.94 up             0.02
+p_Reg_loop1_8_fx_lat_q_u1/QB               latchr      0.38  10.33 dn             0.01
+p_Reg_loop1_8_fx_lat_q_u2/Y                inv01       0.11  10.44 up             0.01
+ix297/Y                                    mux21_ni    0.28  10.72 up             0.02
+p_Reg_loop1_7_fx_lat_q_u1/QB               latchr      0.38  11.11 dn             0.01
+p_Reg_loop1_7_fx_lat_q_u2/Y                inv01       0.11  11.22 up             0.01
+ix309/Y                                    mux21_ni    0.28  11.50 up             0.02
+p_Reg_loop1_6_fx_lat_q_u1/QB               latchr      0.38  11.88 dn             0.01
+p_Reg_loop1_6_fx_lat_q_u2/Y                inv01       0.11  12.00 up             0.01
+ix321/Y                                    mux21_ni    0.28  12.28 up             0.02
+p_Reg_loop1_5_fx_lat_q_u1/QB               latchr      0.38  12.66 dn             0.01
+p_Reg_loop1_5_fx_lat_q_u2/Y                inv01       0.11  12.78 up             0.01
+ix333/Y                                    mux21_ni    0.28  13.06 up             0.02
+p_Reg_loop1_4_fx_lat_q_u1/QB               latchr      0.38  13.44 dn             0.01
+p_Reg_loop1_4_fx_lat_q_u2/Y                inv01       0.11  13.56 up             0.01
+ix345/Y                                    mux21_ni    0.28  13.84 up             0.02
+p_Reg_loop1_3_fx_lat_q_u1/QB               latchr      0.38  14.22 dn             0.01
+p_Reg_loop1_3_fx_lat_q_u2/Y                inv01       0.11  14.34 up             0.01
+ix357/Y                                    mux21_ni    0.28  14.62 up             0.02
+p_Reg_loop1_2_fx_lat_q_u1/QB               latchr      0.38  15.00 dn             0.01
+p_Reg_loop1_2_fx_lat_q_u2/Y                inv01       0.11  15.12 up             0.01
+ix369/Y                                    mux21_ni    0.28  15.40 up             0.02
+p_Reg_loop1_1_fx_lat_q_u1/QB               latchr      0.38  15.78 dn             0.01
+p_Reg_loop1_1_fx_lat_q_u2/Y                inv01       0.17  15.95 up   (loop)    0.02
+ix377/Y                                    and02       0.24  16.19 up             0.02
+p_Reg_loop1_0_fx_lat_q_u1/QB               latchr      0.38  16.57 dn             0.01
+p_Reg_loop1_0_fx_lat_q_u2/Y                inv01       0.12  16.69 up   (loop)    0.01
+ix117/Y                                    nor02ii     0.12  16.81 dn   (loop)    0.01
+ix552/Y                                    buf02       0.18  16.96 up             0.01
+ix526/Y                                    aoi32       0.45  17.46 up   (loop)    0.03
+ix263/Y                                    inv01       0.10  17.55 dn             0.01
+ix386/Y                                    aoi22       0.35  17.91 up   (loop)    0.03
+ix397/Y                                    inv01       0.10  18.00 dn             0.01
+ix402/Y                                    aoi22       0.27  18.28 up   (loop)    0.03
+ix403/Y                                    inv01       0.10  18.38 dn             0.01
+ix420/Y                                    aoi22       0.27  18.65 up   (loop)    0.03
+ix409/Y                                    inv01       0.10  18.75 dn             0.01
+ix450/Y                                    aoi22       0.27  19.02 up   (loop)    0.03
+ix415/Y                                    inv01       0.10  19.12 dn             0.01
+ix473/Y                                    aoi22       0.27  19.39 up   (loop)    0.03
+ix421/Y                                    inv01       0.10  19.49 dn             0.01
+ix496/Y                                    aoi22       0.24  19.73 up             0.02
+ix494/Y                                    xnor2       0.16  19.35 up             0.00
+ix443/Y                                    nor02ii     0.21  20.14 up             0.02
+p_Reg_loop1_15_fx_lat_q_u1/QB              latchr      0.39  20.53 dn             0.01
+p_Reg_loop1_15_fx_lat_q_u2/Y               inv01       0.34  20.86 up   (loop)    0.06
+booth_output(15)/                                      0.00  20.86 up             0.00
+data arrival time                                            20.86
+
+data required time  (default specified)                      22.00
+--------------------------------------------------------------------------------------
+data required time                                           22.00
+data arrival time                                            20.86
+                                                          ----------
+slack                                                       1.14
+--------------------------------------------------------------------------------------
+
+
