@@ -11,12 +11,11 @@ BEGIN
 
 IF(rst = '1') THEN
         q <= '0';
-ELSIF clk'event  then 
-  if clk ='0' then 
+ELSIF clk'event  and clk ='1' then 
 	IF en = '1'  THEN     
  	    q <= d;
 	end if;
-  end if;
+
 END IF;
 END PROCESS;
 END a_my_DFF;
