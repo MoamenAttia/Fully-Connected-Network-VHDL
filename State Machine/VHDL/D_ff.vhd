@@ -1,7 +1,7 @@
 library ieee;
 use ieee.std_logic_1164.all;
 
-entity Dff is
+entity D_ff is
     port ( 
       d   : in  std_logic;
       clk : in  std_logic;
@@ -9,9 +9,9 @@ entity Dff is
       en  : in  std_logic;
       q   : out std_logic
     );
-end entity Dff;
+end entity D_ff;
 
-Architecture a_Dff of Dff is
+Architecture a_Dff of D_ff is
   Begin
     Process(clk , rst , en )
       Begin
@@ -23,4 +23,4 @@ Architecture a_Dff of Dff is
           end if;
         End if;
     End process;
-End a_Dff;
+End architecture;

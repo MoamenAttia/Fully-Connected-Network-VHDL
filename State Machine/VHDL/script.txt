@@ -1,0 +1,38 @@
+load_library tsmc035_typ
+set_working_dir /home/ayman/Desktop/new_folder
+read -technology tsmc035_typ  { /home/ayman/Desktop/new_folder/D_ff.vhd /home/ayman/Desktop/new_folder/tri_state.vhd /home/ayman/Desktop/new_folder/decoder4x16.vhd /home/ayman/Desktop/new_folder/onebitadder.vhd /home/ayman/Desktop/new_folder/nadder.vhd /home/ayman/Desktop/new_folder/alu.vhd /home/ayman/Desktop/new_folder/N_Dff.vhd  /home/ayman/Desktop/new_folder/label_register_file.vhd /home/ayman/Desktop/new_folder/controller.vhd }
+elaborate controller -architecture a_controller 
+set register2register 10.000000
+set input2register 10.000000
+set register2output 10.000000
+set_clock -name .work.controller.a_controller.clk -clock_cycle 10.000000
+set_clock -name .work.controller.a_controller.clk -pulse_width 5.000000
+optimize .work.controller.a_controller -target tsmc035_typ -macro -auto -effort quick -hierarchy flatten 
+optimize_timing .work.controller.a_controller 
+report_area report_area.txt -cell_usage -all_leafs 
+report_delay report_delay.txt -num_paths 1 -critical_paths -clock_frequency
+set novendor_constraint_file FALSE
+auto_write -format VHDL controller_0.vhd
+set novendor_constraint_file FALSE
+auto_write -format SDF controller_0.sdf
+
+
+
+
+### New Script
+load_library tsmc035_typ
+set_working_dir /home/ayman/Desktop/new_folder
+read -technology tsmc035_typ  { /home/ayman/Desktop/new_folder/D_ff.vhd /home/ayman/Desktop/new_folder/tri_state.vhd /home/ayman/Desktop/new_folder/decoder4x16.vhd /home/ayman/Desktop/new_folder/onebitadder.vhd /home/ayman/Desktop/new_folder/nadder.vhd /home/ayman/Desktop/new_folder/alu.vhd /home/ayman/Desktop/new_folder/N_Dff.vhd  /home/ayman/Desktop/new_folder/label_register_file.vhd /home/ayman/Desktop/new_folder/controller.vhd }
+elaborate controller -architecture a_controller 
+pre_optimize .work.controller.a_controller -common_logic -unused_logic -boundary -xor_comparator_optimize 
+pre_optimize .work.controller.a_controller -extract 
+set sdf_type combined
+set register2register 10.000000
+set input2register 10.000000
+set register2output 10.000000
+set_clock -name .work.controller.a_controller.clk -clock_cycle "10.000000"
+set_clock -name .work.controller.a_controller.clk -pulse_width "5.000000"
+optimize .work.controller.a_controller -target tsmc035_typ -macro -auto -effort quick -hierarchy flatten 
+optimize_timing .work.controller.a_controller 
+
+

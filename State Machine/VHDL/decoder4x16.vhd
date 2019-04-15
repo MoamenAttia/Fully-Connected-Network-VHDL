@@ -47,6 +47,8 @@ architecture a_decoder4x16 of decoder4x16 is
           decoder_output <= "0100000000000000";     -- Garbage
         elsif enable_decoder = '1' and selector_decoder = "1111" then
           decoder_output <= "1111111111111111";     -- ALL
+	else 
+	  decoder_output <=  "1111111111111111";
         end if;
       end process;
 end a_decoder4x16;

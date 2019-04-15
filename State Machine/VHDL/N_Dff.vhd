@@ -16,6 +16,6 @@ architecture a_ndff of n_dff is
   begin
     loop1: for i in 0 to n-1 
       generate
-        fx:entity work.dff port map( d(i) , clk , rst , en , q(i) );
+        fx:entity work.d_ff port map( d(i) , clk , rst , en , q(i) );
       end generate;
 end a_ndff;
