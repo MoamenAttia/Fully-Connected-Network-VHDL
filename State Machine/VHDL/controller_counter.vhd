@@ -24,17 +24,23 @@ entity controller is
         mdr_data_out   : inout std_logic_vector(255 downto 0);
         
 	 ---------------- Labels Ports --------------------------
-        label_1_output : out std_logic_vector(15 downto 0);
-        label_2_output : out std_logic_vector(15 downto 0);
-        label_3_output : out std_logic_vector(15 downto 0);
-        label_4_output : out std_logic_vector(15 downto 0);
-        label_5_output : out std_logic_vector(15 downto 0);
-        label_6_output : out std_logic_vector(15 downto 0);
-        label_7_output : out std_logic_vector(15 downto 0);
-        label_8_output : out std_logic_vector(15 downto 0);
-        label_9_output : out std_logic_vector(15 downto 0);
-        label_10_output: out std_logic_vector(15 downto 0)
+        label_1_output : inout std_logic_vector(15 downto 0);
+        label_2_output : inout std_logic_vector(15 downto 0);
+        label_3_output : inout std_logic_vector(15 downto 0);
+        label_4_output : inout std_logic_vector(15 downto 0);
+        label_5_output : inout std_logic_vector(15 downto 0);
+        label_6_output : inout std_logic_vector(15 downto 0);
+        label_7_output : inout std_logic_vector(15 downto 0);
+        label_8_output : inout std_logic_vector(15 downto 0);
+        label_9_output : inout std_logic_vector(15 downto 0);
+        label_10_output: inout std_logic_vector(15 downto 0);
 
+	-- test decoder --
+	sel_dst : inout std_logic_vector(3 downto 0);
+	enable_decoder_dst : inout std_logic;
+	decoder_out_dst : inout std_logic_vector(15 downto 0);
+	state     : inout std_logic_vector(2 downto 0); 
+   	sub_state : inout std_logic_vector(2 downto 0)
     );
 end entity controller;
 
@@ -48,14 +54,14 @@ architecture a_controller of controller is
     -- ready : state whose job is to rise a signal to booth's algorithm to start multipication.
 
     --type sub_state_type is ( sub_state_1 , sub_state_2 , sub_state_3 , sub_state_4 , sub_state_5 );
-    signal state     : std_logic_vector(2 downto 0); 
-    signal sub_state : std_logic_vector(2 downto 0); -- 000 001 010 011 100
+    --signal state     : std_logic_vector(2 downto 0); 
+   --signal sub_state : std_logic_vector(2 downto 0); -- 000 001 010 011 100
 
     signal enable_decoder_src     : std_logic; -- enable the source decoder.
-    signal enable_decoder_dst     : std_logic; -- enable the destination decoder.
+    -- signal enable_decoder_dst     : std_logic; -- enable the destination decoder.
     
     signal sel_src : std_logic_vector(3 downto 0); -- selector for the souce decoder.
-    signal sel_dst : std_logic_vector(3 downto 0); -- selector for the destination decoder.
+    -- signal sel_dst : std_logic_vector(3 downto 0); -- selector for the destination decoder.
     
     -- num
     signal enable_num : std_logic;
@@ -83,7 +89,7 @@ architecture a_controller of controller is
     
 begin
 	
-    process( clk , rst )
+    process( clk , rst ,ready_signal)
     begin
 
         if(rst='1') then 
@@ -184,16 +190,15 @@ begin
                 -- here all neurons are done and I'm waiting for another initiate signal.
                 if(num_out = null_vec_out(7 downto 0)) then
                     state <= "100"; --idle
-                end if;
                 -- if ready_signal is equal to zero this means booths needs more.
-                if (ready_signal = '0') then
+                elsif (ready_signal = '0') then
                     if(sub_state = "000") then
-                        sel_src <= "0000";          
-                        sel_dst <= "0000"; 
+                        sel_src <= "0000";
+                        sel_dst <= "0000";
                         enable_mar_in <= '0';
-                        enable_write <= '0'; 
+                        enable_write <= '0';
                         enable_mdr_in <= '0';
-                        enable_mdr_out <= '0'; 
+                        enable_mdr_out <= '0';
                         enable_decoder_src <= '0';
                         enable_decoder_dst <= '0';
                         ready_signal <= '0';
@@ -205,10 +210,12 @@ begin
                         alu_inp1 <= address_out;
                         alu_inp2 <= "00000001";
                         alu_sel <= '0';
-                    else
-                        state <= "011";
-                        sub_state <= "000";
+                    elsif ( sub_state = "010" ) then
+                        sub_state <= "011";
                         address_in <= alu_out;
+                    else 
+			sub_state <= "000";
+			state <= "011";
                         enable_mar_in <= '0';
                         enable_mdr_in <= '0';
                     end if;    
@@ -241,16 +248,18 @@ begin
         end if;
     end process; 
     
-    specialregfile : entity work.special_register_file port map ( clk , clk_inv , rst ,  enable_mar_in , enable_mdr_in , enable_mdr_out , enable_write , address_out, mdr_data_out );
+    -- specialregfile : entity work.special_register_file port map ( clk , clk_inv , rst ,  enable_mar_in , enable_mdr_in , enable_mdr_out , enable_write , address_out, mdr_data_out );
 
     -- address_out <= address_out_7 & address_out_6 & address_out_5 & address_out_4 & address_out_3 & address_out_2 & address_out_1 & address_out_0;
     -- signal address_out : std_logic_vector(7 downto 0);
 
-    labelsregfile  : entity work.label_register_file port map ( clk , rst , enable_decoder_src , enable_decoder_dst , sel_src, sel_dst , mdr_data_out , label_1_output , label_2_output , label_3_output , label_4_output , label_5_output , label_6_output , label_7_output , label_8_output , label_9_output , label_10_output );
+
+    labelsregfile  : entity work.label_register_file port map ( clk , rst , enable_decoder_src , enable_decoder_dst , sel_src, sel_dst , mdr_data_out , label_1_output , label_2_output , label_3_output , label_4_output , label_5_output , label_6_output , label_7_output , label_8_output , label_9_output , label_10_output , decoder_out_dst );
     alu_subtractor_adder : entity work.alu generic map ( label_size ) port map ( alu_inp1 , alu_inp2 , alu_sel , alu_cin , alu_out , alu_cout );
 
     address: entity work.N_Dff generic map (address_size) port map ( clk , rst , enable_address , address_in , address_out );
     num : entity work.N_Dff generic map ( 8 ) port map ( clk , rst , enable_num , num_in , num_out );
     null_vec : entity work.N_Dff generic map ( 256 ) port map ( clk , rst , '0' , null_vec_in , null_vec_out );
-
+ --   ready_reg : entity work.D_ff port map ( ready_in, clk, rst, enable_ready, ready_out );
+ 	
 end a_controller;

@@ -27,7 +27,7 @@ architecture a_special_register_file of special_register_file is
         mdr    : entity work.N_Dff generic map (256) port map ( clk , rst , enable_mdr_in , data_out , mdr_out );
         tri_state_mdr_bus : entity work.tri_state generic map ( 256 ) port map ( enable_mdr_out , mdr_out , mdr_data_out );
 
-        my_ram : entity work.ram generic map ( 256 , 64 , 8 ) port map ( clk_inv , enable_write , mar_out , mdr_out , data_out );
+        my_ram : entity work.ram generic map ( 256 , 64 , 8 ) port map ( clk_inv , enable_write , address , mdr_out , data_out );
         
 
 	
