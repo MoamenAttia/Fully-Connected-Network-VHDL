@@ -1,3 +1,4 @@
+
 library ieee;
 use ieee.std_logic_1164.all;
 use ieee.numeric_std.all;
@@ -15,7 +16,8 @@ entity controller is
         rst            : in    std_logic;
         initiate       : inout std_logic;
         ready_signal   : inout std_logic;
-        -- bi_bus         : inout std_logic_vector(n-1 downto 0);
+        done           : inout std_logic;
+
         -- memory
         enable_mar_in  : inout std_logic;
         enable_mdr_in  : inout std_logic;
@@ -35,41 +37,22 @@ entity controller is
         label_9_output : inout std_logic_vector(15 downto 0);
         label_10_output: inout std_logic_vector(15 downto 0);
 
-	-- test decoder --
-	sel_dst : inout std_logic_vector(3 downto 0);
-	enable_decoder_dst : inout std_logic;
-	decoder_out_dst : inout std_logic_vector(15 downto 0);
-	state     : inout std_logic_vector(2 downto 0); 
-   	sub_state : inout std_logic_vector(2 downto 0)
+        
+	    state     : inout std_logic_vector(2 downto 0); 
+   	    sub_state : inout std_logic_vector(2 downto 0)
     );
 end entity controller;
 
 architecture a_controller of controller is
 
-    --type state_type is ( idle , fetch_num_neuron ,  prepare_labels , fetch_neuron_weights , ready ); -- our fsm.    
-    -- idle : state that make the fsm waiting to begin.
-    -- prepare_labels  : state to prepare bias registers with initial values ( latched from memory in specific location ).
-    -- fetch_neuron : state to fetch neuron from the memory.
-    -- fetch_weights : state to fetch all weight (note: the weights will be on mdr all the time).
-    -- ready : state whose job is to rise a signal to booth's algorithm to start multipication.
+    -- decoder signals
+    signal sel_dst : std_logic_vector(3 downto 0);
+    signal enable_decoder_dst : std_logic;
 
-    --type sub_state_type is ( sub_state_1 , sub_state_2 , sub_state_3 , sub_state_4 , sub_state_5 );
-    --signal state     : std_logic_vector(2 downto 0); 
-   --signal sub_state : std_logic_vector(2 downto 0); -- 000 001 010 011 100
-
-    signal enable_decoder_src     : std_logic; -- enable the source decoder.
-    -- signal enable_decoder_dst     : std_logic; -- enable the destination decoder.
-    
-    signal sel_src : std_logic_vector(3 downto 0); -- selector for the souce decoder.
-    -- signal sel_dst : std_logic_vector(3 downto 0); -- selector for the destination decoder.
-    
     -- num
     signal enable_num : std_logic;
     signal num_in : std_logic_vector(7 downto 0);
     signal num_out : std_logic_vector(7 downto 0);
-
-    --signal state : state_type;      -- main signal of fsm ( this is the main state ).
-    --signal sub_state : sub_state_type; -- signal to avoid infinite loop.
 
     -- signal enable_null_vec : std_logic;
     signal null_vec_in : std_logic_vector(255 downto 0);
@@ -87,16 +70,26 @@ architecture a_controller of controller is
     signal alu_cin   : std_logic;
     signal alu_cout  : std_logic;
     
+
+    signal label_1_input  : std_logic_vector(15 downto 0);
+    signal label_2_input  : std_logic_vector(15 downto 0);
+    signal label_3_input  : std_logic_vector(15 downto 0);
+    signal label_4_input  : std_logic_vector(15 downto 0);
+    signal label_5_input  : std_logic_vector(15 downto 0);
+    signal label_6_input  : std_logic_vector(15 downto 0);
+    signal label_7_input  : std_logic_vector(15 downto 0);
+    signal label_8_input  : std_logic_vector(15 downto 0);
+    signal label_9_input  : std_logic_vector(15 downto 0);
+    signal label_10_input : std_logic_vector(15 downto 0);
+    
 begin
 	
-    process( clk , rst ,ready_signal)
+    process( clk , rst , ready_signal)
     begin
 
         if(rst='1') then 
             state <= "000";
   	        sub_state <= "000";
-            enable_decoder_src <= '0';
-            sel_src <= "0000";
             sel_dst <= "0000"; 
             enable_decoder_dst <= '0';
             alu_cin <= '0';
@@ -107,6 +100,17 @@ begin
             enable_mdr_out <= '0';
             enable_write   <= '0';
             address_in <= ( 7 downto 0 => '0');
+            
+            label_1_input <= (15 downto 0 => '0');
+            label_2_input <= (15 downto 0 => '0');
+            label_3_input <= (15 downto 0 => '0');
+            label_4_input <= (15 downto 0 => '0');
+            label_5_input <= (15 downto 0 => '0');
+            label_6_input <= (15 downto 0 => '0');
+            label_7_input <= (15 downto 0 => '0');
+            label_8_input <= (15 downto 0 => '0');
+            label_9_input <= (15 downto 0 => '0');
+            label_10_input <= (15 downto 0 => '0');
 
         elsif (clk'event and clk = '1') then
             if(initiate = '1') then
@@ -115,13 +119,11 @@ begin
                 state <= "000";       
             elsif (state = "000" ) then
                 if (sub_state = "000") then
-                    sel_src <= "0000";    
                     sel_dst <= "0000"; 
                     enable_mar_in <= '0';
                     enable_write <= '0'; 
                     enable_mdr_in <= '0';
                     enable_mdr_out <= '0'; 
-                    enable_decoder_src <= '0';
                     enable_decoder_dst <= '0';
                     address_in <= "00000000";
                     enable_num <= '1';
@@ -152,13 +154,11 @@ begin
 
             elsif (state = "001") then
                 if(sub_state = "000") then
-                    sel_src <= "0000";
                     sel_dst <= "0000"; 
                     enable_mar_in <= '0';
                     enable_write <= '0'; 
                     enable_mdr_in <= '0';
                     enable_mdr_out <= '0'; 
-                    enable_decoder_src <= '0';
                     enable_decoder_dst <= '0';
                     sub_state <= "001";
                 elsif (sub_state = "001") then 
@@ -176,14 +176,26 @@ begin
                     enable_mdr_out <= '1';
                     address_in <= alu_out;
                     enable_mdr_in <= '0';
-                    enable_decoder_dst <= '1';
-                    sel_dst <= "1111";
+                    
+                    
                 else
                     sub_state <= "000";
                     state <= "010";
                     enable_mdr_out <= '0';
-                    enable_decoder_dst <= '0';
-                    sel_dst <= "0000";
+                    enable_decoder_dst <= '1';
+                    sel_dst <= "1111";
+
+                    label_1_input  <= mdr_data_out(15 downto 0);
+                    label_2_input  <= mdr_data_out(31 downto 16);
+                    label_3_input  <= mdr_data_out(47 downto 32);
+                    label_4_input  <= mdr_data_out(63 downto 48);
+                    label_5_input  <= mdr_data_out(79 downto 64);
+                    label_6_input  <= mdr_data_out(95 downto 80);
+                    label_7_input  <= mdr_data_out(111 downto 96);
+                    label_8_input  <= mdr_data_out(127 downto 112);
+                    label_9_input  <= mdr_data_out(143 downto 128);
+                    label_10_input <= mdr_data_out(159 downto 144);
+
                 end if;
             
             elsif (state = "010") then
@@ -191,15 +203,13 @@ begin
                 if(num_out = null_vec_out(7 downto 0)) then
                     state <= "100"; --idle
                 -- if ready_signal is equal to zero this means booths needs more.
-                elsif (ready_signal = '0') then
+                elsif (ready_signal = '0' or done = '1') then
                     if(sub_state = "000") then
-                        sel_src <= "0000";
                         sel_dst <= "0000";
                         enable_mar_in <= '0';
                         enable_write <= '0';
                         enable_mdr_in <= '0';
                         enable_mdr_out <= '0';
-                        enable_decoder_src <= '0';
                         enable_decoder_dst <= '0';
                         ready_signal <= '0';
                         sub_state <= "001";
@@ -214,21 +224,19 @@ begin
                         sub_state <= "011";
                         address_in <= alu_out;
                     else 
-			sub_state <= "000";
-			state <= "011";
+	    	        	sub_state <= "000";
+		    	        state <= "011";
                         enable_mar_in <= '0';
                         enable_mdr_in <= '0';
                     end if;    
                 end if ;
             elsif(state = "011") then
                 if (sub_state = "000") then
-                    sel_src <= "0000";          
                     sel_dst <= "0000"; 
                     enable_mar_in <= '0';
                     enable_write <= '0'; 
                     enable_mdr_in <= '0';
                     enable_mdr_out <= '0'; 
-                    enable_decoder_src <= '0';
                     enable_decoder_dst <= '0';
                     alu_inp1 <= num_out;
                     alu_inp2 <= "00000001";
@@ -248,18 +256,91 @@ begin
         end if;
     end process; 
     
-    -- specialregfile : entity work.special_register_file port map ( clk , clk_inv , rst ,  enable_mar_in , enable_mdr_in , enable_mdr_out , enable_write , address_out, mdr_data_out );
-
+    specialregfile : entity work.special_register_file port map ( clk , clk_inv , rst ,  enable_mar_in , enable_mdr_in , enable_mdr_out , enable_write , address_out, mdr_data_out );
     -- address_out <= address_out_7 & address_out_6 & address_out_5 & address_out_4 & address_out_3 & address_out_2 & address_out_1 & address_out_0;
     -- signal address_out : std_logic_vector(7 downto 0);
 
+    labelsregfile  : entity work.label_register_file 
+    port map ( 
+        
+        clk,
+        rst,
+        
+        enable_decoder_dst,
+        sel_dst,
+        
+        label_1_input,
+        label_2_input,
+        label_3_input,
+        label_4_input,
+        label_5_input,
+        label_6_input,
+        label_7_input,
+        label_8_input,
+        label_9_input,
+        label_10_input,
+        
+        label_1_output, 
+        label_2_output, 
+        label_3_output,
+        label_4_output,
+        label_5_output, 
+        label_6_output,
+        label_7_output, 
+        label_8_output, 
+        label_9_output,
+        label_10_output 
+    );
 
-    labelsregfile  : entity work.label_register_file port map ( clk , rst , enable_decoder_src , enable_decoder_dst , sel_src, sel_dst , mdr_data_out , label_1_output , label_2_output , label_3_output , label_4_output , label_5_output , label_6_output , label_7_output , label_8_output , label_9_output , label_10_output , decoder_out_dst );
     alu_subtractor_adder : entity work.alu generic map ( label_size ) port map ( alu_inp1 , alu_inp2 , alu_sel , alu_cin , alu_out , alu_cout );
 
     address: entity work.N_Dff generic map (address_size) port map ( clk , rst , enable_address , address_in , address_out );
     num : entity work.N_Dff generic map ( 8 ) port map ( clk , rst , enable_num , num_in , num_out );
     null_vec : entity work.N_Dff generic map ( 256 ) port map ( clk , rst , '0' , null_vec_in , null_vec_out );
- --   ready_reg : entity work.D_ff port map ( ready_in, clk, rst, enable_ready, ready_out );
- 	
+     
+    booth : entity work.wtf port map (
+        
+        clk => clk,
+        rst => rst,
+        ready_signal => ready_signal,
+        done,
+
+        -- Neuron and its weights
+        neuron    => mdr_data_out(15 downto 0)  
+        weight_1  => mdr_data_out(31 downto 16)
+        weight_2  => mdr_data_out(47 downto 32)  
+        weight_3  => mdr_data_out(63 downto 48)
+        weight_4  => mdr_data_out(79 downto 64)
+        weight_5  => mdr_data_out(95 downto 80)
+        weight_6  => mdr_data_out(111 downto 96)
+        weight_7  => mdr_data_out(127 downto 112)
+        weight_8  => mdr_data_out(143 downto 128)
+        weight_9  => mdr_data_out(159 downto 144)
+        weight_10 => mdr_data_out(175 downto 160)
+        
+        label_1_input,
+        label_2_input,
+        label_3_input,
+        label_4_input,
+        label_5_input,
+        label_6_input,
+        label_7_input,
+        label_8_input,
+        label_9_input,
+        label_10_input,
+        
+        label_1_output
+        label_2_output,
+        label_3_output,
+        label_4_output,
+        label_5_output,
+        label_6_output, 
+        label_7_output,
+        label_8_output,
+        label_9_output,
+        label_10_output,
+        
+        enable_decoder_dst ,
+        sel_dst
+        );
 end a_controller;
