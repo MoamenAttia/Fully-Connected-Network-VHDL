@@ -118,8 +118,8 @@ booth_integrtaion_9:entity work.booth_integration  generic map (n)port map ( set
 adder_9:entity work.nadder  generic map (n) port map (booth_integration_output_9(15 downto 0),  adderInput_9 , '0' ,label_9,temp_cout);
 ------------------------------------------------------------------------------------------------------------------------------------------
  dec_enable <= shift_reg_output(n+2);
-dec_sel <= "1111" when shift_reg_output(n+2)='1'
-else  "0000" ;
+dec_sel <= '1111' when shift_reg_output(n+2)='1'
+else  '0000' ;
 done <= shift_reg_output(n+3);
 ------------------------------------------------------------------------------------------------------------------------------------------
 END my_booth_adder_components;
