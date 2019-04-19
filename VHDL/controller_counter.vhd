@@ -49,6 +49,12 @@ architecture a_controller of controller is
     signal sel_dst : std_logic_vector(3 downto 0);
     signal enable_decoder_dst : std_logic;
 
+    signal sel_dst_booth : std_logic_vector(3 downto 0);
+    signal enable_decoder_dst_booth : std_logic;
+
+    signal label_reg_file_sel_dst : std_logic_vector(3 downto 0);
+    signal label_reg_file_enable_decoder_dst : std_logic;
+    
     -- num
     signal enable_num : std_logic;
     signal num_in : std_logic_vector(7 downto 0);
@@ -81,6 +87,35 @@ architecture a_controller of controller is
     signal label_8_input  : std_logic_vector(15 downto 0);
     signal label_9_input  : std_logic_vector(15 downto 0);
     signal label_10_input : std_logic_vector(15 downto 0);
+
+    
+
+
+    signal label_1_input_state_machine  : std_logic_vector(15 downto 0);
+    signal label_2_input_state_machine  : std_logic_vector(15 downto 0);
+    signal label_3_input_state_machine  : std_logic_vector(15 downto 0);
+    signal label_4_input_state_machine  : std_logic_vector(15 downto 0);
+    signal label_5_input_state_machine  : std_logic_vector(15 downto 0);
+    signal label_6_input_state_machine  : std_logic_vector(15 downto 0);
+    signal label_7_input_state_machine  : std_logic_vector(15 downto 0);
+    signal label_8_input_state_machine  : std_logic_vector(15 downto 0);
+    signal label_9_input_state_machine  : std_logic_vector(15 downto 0);
+    signal label_10_input_state_machine : std_logic_vector(15 downto 0);
+
+
+
+    
+
+    signal label_1_input_booth  : std_logic_vector(15 downto 0); 
+    signal label_2_input_booth  : std_logic_vector(15 downto 0);
+    signal label_3_input_booth  : std_logic_vector(15 downto 0);
+    signal label_4_input_booth  : std_logic_vector(15 downto 0);
+    signal label_5_input_booth  : std_logic_vector(15 downto 0);
+    signal label_6_input_booth  : std_logic_vector(15 downto 0);
+    signal label_7_input_booth  : std_logic_vector(15 downto 0);
+    signal label_8_input_booth  : std_logic_vector(15 downto 0);
+    signal label_9_input_booth  : std_logic_vector(15 downto 0);
+    signal label_10_input_booth : std_logic_vector(15 downto 0);
     
 begin
 	
@@ -101,16 +136,16 @@ begin
             enable_write   <= '0';
             address_in <= ( 7 downto 0 => '0');
             
-            label_1_input <= (15 downto 0 => '0');
-            label_2_input <= (15 downto 0 => '0');
-            label_3_input <= (15 downto 0 => '0');
-            label_4_input <= (15 downto 0 => '0');
-            label_5_input <= (15 downto 0 => '0');
-            label_6_input <= (15 downto 0 => '0');
-            label_7_input <= (15 downto 0 => '0');
-            label_8_input <= (15 downto 0 => '0');
-            label_9_input <= (15 downto 0 => '0');
-            label_10_input <= (15 downto 0 => '0');
+            label_1_input_state_machine  <= (15 downto 0 => '0');
+            label_2_input_state_machine  <= (15 downto 0 => '0');
+            label_3_input_state_machine  <= (15 downto 0 => '0');
+            label_4_input_state_machine  <= (15 downto 0 => '0');
+            label_5_input_state_machine  <= (15 downto 0 => '0');
+            label_6_input_state_machine  <= (15 downto 0 => '0');
+            label_7_input_state_machine  <= (15 downto 0 => '0');
+            label_8_input_state_machine  <= (15 downto 0 => '0');
+            label_9_input_state_machine  <= (15 downto 0 => '0');
+            label_10_input_state_machine <= (15 downto 0 => '0');
 
         elsif (clk'event and clk = '1') then
             if(initiate = '1') then
@@ -173,7 +208,6 @@ begin
                     enable_mar_in <= '0';
                 elsif (sub_state = "011") then
                     sub_state <= "100";
-                    enable_mdr_out <= '1';
                     address_in <= alu_out;
                     enable_mdr_in <= '0';
                     
@@ -185,16 +219,16 @@ begin
                     enable_decoder_dst <= '1';
                     sel_dst <= "1111";
 
-                    label_1_input  <= mdr_data_out(15 downto 0);
-                    label_2_input  <= mdr_data_out(31 downto 16);
-                    label_3_input  <= mdr_data_out(47 downto 32);
-                    label_4_input  <= mdr_data_out(63 downto 48);
-                    label_5_input  <= mdr_data_out(79 downto 64);
-                    label_6_input  <= mdr_data_out(95 downto 80);
-                    label_7_input  <= mdr_data_out(111 downto 96);
-                    label_8_input  <= mdr_data_out(127 downto 112);
-                    label_9_input  <= mdr_data_out(143 downto 128);
-                    label_10_input <= mdr_data_out(159 downto 144);
+                    label_1_input_state_machine  <= mdr_data_out(15 downto 0);
+                    label_2_input_state_machine  <= mdr_data_out(31 downto 16);
+                    label_3_input_state_machine  <= mdr_data_out(47 downto 32);
+                    label_4_input_state_machine  <= mdr_data_out(63 downto 48);
+                    label_5_input_state_machine  <= mdr_data_out(79 downto 64);
+                    label_6_input_state_machine  <= mdr_data_out(95 downto 80);
+                    label_7_input_state_machine  <= mdr_data_out(111 downto 96);
+                    label_8_input_state_machine  <= mdr_data_out(127 downto 112);
+                    label_9_input_state_machine  <= mdr_data_out(143 downto 128);
+                    label_10_input_state_machine <= mdr_data_out(159 downto 144);
 
                 end if;
             
@@ -260,14 +294,17 @@ begin
     -- address_out <= address_out_7 & address_out_6 & address_out_5 & address_out_4 & address_out_3 & address_out_2 & address_out_1 & address_out_0;
     -- signal address_out : std_logic_vector(7 downto 0);
 
+    
+
+
     labelsregfile  : entity work.label_register_file 
     port map ( 
         
         clk,
         rst,
         
-        enable_decoder_dst,
-        sel_dst,
+        label_reg_file_enable_decoder_dst,
+        label_reg_file_sel_dst,
         
         label_1_input,
         label_2_input,
@@ -298,38 +335,38 @@ begin
     num : entity work.N_Dff generic map ( 8 ) port map ( clk , rst , enable_num , num_in , num_out );
     null_vec : entity work.N_Dff generic map ( 256 ) port map ( clk , rst , '0' , null_vec_in , null_vec_out );
      
-    booth : entity work.wtf port map (
+    booth : entity work.booth_adder_components port map (
         
-        clk => clk,
-        rst => rst,
-        ready_signal => ready_signal,
+        clk,
+        rst,
+        ready_signal,
         done,
 
         -- Neuron and its weights
-        neuron    => mdr_data_out(15 downto 0)  
-        weight_1  => mdr_data_out(31 downto 16)
-        weight_2  => mdr_data_out(47 downto 32)  
-        weight_3  => mdr_data_out(63 downto 48)
-        weight_4  => mdr_data_out(79 downto 64)
-        weight_5  => mdr_data_out(95 downto 80)
-        weight_6  => mdr_data_out(111 downto 96)
-        weight_7  => mdr_data_out(127 downto 112)
-        weight_8  => mdr_data_out(143 downto 128)
-        weight_9  => mdr_data_out(159 downto 144)
-        weight_10 => mdr_data_out(175 downto 160)
+        mdr_data_out(15 downto 0)  ,
+        mdr_data_out(31 downto 16),
+        mdr_data_out(47 downto 32)  ,
+        mdr_data_out(63 downto 48),
+        mdr_data_out(79 downto 64),
+        mdr_data_out(95 downto 80),
+        mdr_data_out(111 downto 96),
+        mdr_data_out(127 downto 112),
+        mdr_data_out(143 downto 128),
+        mdr_data_out(159 downto 144),
+        mdr_data_out(175 downto 160),
         
-        label_1_input,
-        label_2_input,
-        label_3_input,
-        label_4_input,
-        label_5_input,
-        label_6_input,
-        label_7_input,
-        label_8_input,
-        label_9_input,
-        label_10_input,
+        label_1_input_booth,
+        label_2_input_booth,
+        label_3_input_booth,
+        label_4_input_booth,
+        label_5_input_booth,
+        label_6_input_booth,
+        label_7_input_booth,
+        label_8_input_booth,
+        label_9_input_booth,
+        label_10_input_booth,
         
-        label_1_output
+        label_1_output,
         label_2_output,
         label_3_output,
         label_4_output,
@@ -340,7 +377,49 @@ begin
         label_9_output,
         label_10_output,
         
-        enable_decoder_dst ,
-        sel_dst
+        enable_decoder_dst_booth,
+	sel_dst_booth
+        
         );
+
+    label_reg_file_enable_decoder_dst <= '1' when (enable_decoder_dst = '1' or enable_decoder_dst_booth = '1') else
+                                         '0';
+    
+    label_reg_file_sel_dst <=  sel_dst when enable_decoder_dst = '1' else
+                               sel_dst_booth when enable_decoder_dst_booth = '1' else
+                                "0000";
+
+
+
+    label_1_input <= label_1_input_booth when  enable_decoder_dst_booth = '1' else 
+                        label_1_input_state_machine when enable_decoder_dst = '1';
+    
+    label_2_input <= label_2_input_booth when  enable_decoder_dst_booth = '1' else
+    label_2_input_state_machine when enable_decoder_dst = '1';
+        
+    label_3_input <= label_3_input_booth when  enable_decoder_dst_booth = '1' else
+    label_3_input_state_machine when enable_decoder_dst = '1';
+        
+    label_4_input <= label_4_input_booth when  enable_decoder_dst_booth = '1' else
+    label_4_input_state_machine when enable_decoder_dst = '1';
+        
+    label_5_input <= label_5_input_booth when  enable_decoder_dst_booth = '1' else
+    label_5_input_state_machine when enable_decoder_dst = '1';
+        
+    label_6_input <= label_6_input_booth when  enable_decoder_dst_booth = '1' else
+    label_6_input_state_machine when enable_decoder_dst = '1';
+        
+    label_7_input <= label_7_input_booth when  enable_decoder_dst_booth = '1' else
+    label_7_input_state_machine when enable_decoder_dst = '1';
+        
+    label_8_input <= label_8_input_booth when  enable_decoder_dst_booth = '1' else
+    label_8_input_state_machine when enable_decoder_dst = '1';
+        
+    label_9_input <= label_9_input_booth when  enable_decoder_dst_booth = '1' else
+    label_9_input_state_machine when enable_decoder_dst = '1';
+        
+    label_10_input <= label_10_input_booth when  enable_decoder_dst_booth = '1' else
+    label_10_input_state_machine when enable_decoder_dst = '1';
+        
+        
 end a_controller;

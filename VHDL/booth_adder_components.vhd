@@ -91,7 +91,7 @@ booth_integrtaion_0:entity work.booth_integration  generic map (n)port map ( set
 adder_0:entity work.nadder  generic map (n) port map (booth_integration_output_0(15 downto 0),  adderInput_0 , '0' ,label_0,temp_cout);
 ----------------------------------------------------------------------------------------------------------------------------------------------
 booth_integrtaion_1:entity work.booth_integration  generic map (n)port map ( set, clk , rst ,neuron,weight_1,booth_integration_output_1);
-adder_1:entity work.nadder  generic map (n) port map (booth_integration_output_1(15 downto 0),  adderInput_2 , '0' ,label_1,temp_cout);
+adder_1:entity work.nadder  generic map (n) port map (booth_integration_output_1(15 downto 0),  adderInput_1 , '0' ,label_1,temp_cout);
 ----------------------------------------------------------------------------------------------------------------------------------------------
 booth_integrtaion_2:entity work.booth_integration  generic map (n)port map ( set, clk , rst ,neuron,weight_2,booth_integration_output_2);
 adder_2:entity work.nadder  generic map (n) port map (booth_integration_output_2(15 downto 0),  adderInput_2 , '0' ,label_2,temp_cout);
