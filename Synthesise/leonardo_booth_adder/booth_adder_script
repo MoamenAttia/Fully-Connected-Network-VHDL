@@ -1,0 +1,21 @@
+load_library tsmc035_typ
+set_working_dir /home/ayman/Desktop/Fully-Connected-Network-VHDL/VHDL
+read -technology "tsmc035_typ"  {/home/ayman/Desktop/Fully-Connected-Network-VHDL/VHDL/DFF.vhd /home/ayman/Desktop/Fully-Connected-Network-VHDL/VHDL/my_nDFF.vhd /home/ayman/Desktop/Fully-Connected-Network-VHDL/VHDL/shift_reg.vhd /home/ayman/Desktop/Fully-Connected-Network-VHDL/VHDL/shiftregister_integration.vhd /home/ayman/Desktop/Fully-Connected-Network-VHDL/VHDL/onebitadder.vhd /home/ayman/Desktop/Fully-Connected-Network-VHDL/VHDL/nadder.vhd /home/ayman/Desktop/Fully-Connected-Network-VHDL/VHDL/Twos_Complement.vhd /home/ayman/Desktop/Fully-Connected-Network-VHDL/VHDL/compare_add_sub.vhd /home/ayman/Desktop/Fully-Connected-Network-VHDL/VHDL/booth_integration.vhd /home/ayman/Desktop/Fully-Connected-Network-VHDL/VHDL/booth_adder_components.vhd }
+elaborate booth_adder_components -architecture my_booth_adder_components 
+pre_optimize .work.booth_adder_components.my_booth_adder_components -common_logic -boundary -xor_comparator_optimize 
+pre_optimize .work.booth_adder_components.my_booth_adder_components -extract 
+set sdf_type combined
+set register2register 10.000000
+set input2register 10.000000
+set register2output 10.000000
+set_clock -name .work.booth_adder_components.my_booth_adder_components.clk -clock_cycle "10.000000"
+set_clock -name .work.booth_adder_components.my_booth_adder_components.clk -pulse_width "5.000000"
+optimize .work.booth_adder_components.my_booth_adder_components -target tsmc035_typ -macro -auto -effort quick -hierarchy flatten 
+optimize_timing .work.booth_adder_components.my_booth_adder_components 
+report_area area_booth_adder -cell_usage -all_leafs 
+report_delay delay_booth_adder -num_paths 1 -critical_paths -clock_frequency
+set novendor_constraint_file FALSE
+auto_write -format VHDL booth_adder_components_output.vhd
+set novendor_constraint_file FALSE
+auto_write -format SDF booth_adder_components_output.sdf
+

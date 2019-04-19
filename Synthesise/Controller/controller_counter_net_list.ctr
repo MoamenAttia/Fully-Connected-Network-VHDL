@@ -1,0 +1,7 @@
+CLOCK_CYCLE "10.000000" .work.controller.a_controller.clk
+PULSE_WIDTH "5.000000" .work.controller.a_controller.clk
+set_attribute .work.controller.a_controller.clk -name CLOCK_CYCLE -value 10.000000 -port
+set_attribute .work.controller.a_controller.clk -name PULSE_WIDTH -value 5.000000 -port
+set input2register 10.000000
+set register2register 10.000000
+set register2output 10.000000

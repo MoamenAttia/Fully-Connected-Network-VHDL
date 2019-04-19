@@ -39,7 +39,9 @@ entity controller is
 
         
 	    state     : inout std_logic_vector(2 downto 0); 
-   	    sub_state : inout std_logic_vector(2 downto 0)
+        sub_state : inout std_logic_vector(2 downto 0);
+        answer    : out std_logic_vector(15 downto 0);
+        done_comp : inout std_logic
     );
 end entity controller;
 
@@ -61,8 +63,8 @@ architecture a_controller of controller is
     signal num_out : std_logic_vector(7 downto 0);
 
     -- signal enable_null_vec : std_logic;
-    signal null_vec_in : std_logic_vector(255 downto 0);
-    signal null_vec_out : std_logic_vector(255 downto 0);
+    signal null_vec_in : std_logic_vector(7 downto 0);
+    signal null_vec_out : std_logic_vector(7 downto 0);
     
     -- address
     signal enable_address : std_logic;
@@ -117,6 +119,9 @@ architecture a_controller of controller is
     signal label_9_input_booth  : std_logic_vector(15 downto 0);
     signal label_10_input_booth : std_logic_vector(15 downto 0);
     
+
+    signal start_comp : std_logic;
+
 begin
 	
     process( clk , rst , ready_signal)
@@ -135,7 +140,9 @@ begin
             enable_mdr_out <= '0';
             enable_write   <= '0';
             address_in <= ( 7 downto 0 => '0');
-            
+
+            start_comp <= '0';
+
             label_1_input_state_machine  <= (15 downto 0 => '0');
             label_2_input_state_machine  <= (15 downto 0 => '0');
             label_3_input_state_machine  <= (15 downto 0 => '0');
@@ -162,7 +169,7 @@ begin
                     enable_decoder_dst <= '0';
                     address_in <= "00000000";
                     enable_num <= '1';
-                    null_vec_in <= (255 downto 0 =>'0');
+                    null_vec_in <= (7 downto 0 =>'0');
                     sub_state <= "001";
                 elsif (sub_state = "001") then
                     sub_state <= "010";
@@ -234,7 +241,8 @@ begin
             
             elsif (state = "010") then
                 -- here all neurons are done and I'm waiting for another initiate signal.
-                if(num_out = null_vec_out(7 downto 0)) then
+                if(num_out = null_vec_out and done = '1') then
+                    start_comp <= '1';
                     state <= "100"; --idle
                 -- if ready_signal is equal to zero this means booths needs more.
                 elsif (ready_signal = '0' or done = '1') then
@@ -290,11 +298,27 @@ begin
         end if;
     end process; 
     
-    specialregfile : entity work.special_register_file port map ( clk , clk_inv , rst ,  enable_mar_in , enable_mdr_in , enable_mdr_out , enable_write , address_out, mdr_data_out );
+    -- specialregfile : entity work.special_register_file port map ( clk , clk_inv , rst ,  enable_mar_in , enable_mdr_in , enable_mdr_out , enable_write , address_out, mdr_data_out );
     -- address_out <= address_out_7 & address_out_6 & address_out_5 & address_out_4 & address_out_3 & address_out_2 & address_out_1 & address_out_0;
     -- signal address_out : std_logic_vector(7 downto 0);
 
-    
+    max_calc : entity work.maximum_ic port map(
+        clk         ,
+        rst         ,
+        start_comp  ,
+        done_comp   ,
+        label_1_output, 
+        label_2_output, 
+        label_3_output,
+        label_4_output,
+        label_5_output, 
+        label_6_output,
+        label_7_output, 
+        label_8_output, 
+        label_9_output,
+        label_10_output,
+        answer  
+    );
 
 
     labelsregfile  : entity work.label_register_file 
@@ -333,7 +357,7 @@ begin
 
     address: entity work.N_Dff generic map (address_size) port map ( clk , rst , enable_address , address_in , address_out );
     num : entity work.N_Dff generic map ( 8 ) port map ( clk , rst , enable_num , num_in , num_out );
-    null_vec : entity work.N_Dff generic map ( 256 ) port map ( clk , rst , '0' , null_vec_in , null_vec_out );
+    null_vec : entity work.N_Dff generic map ( 8 ) port map ( clk , rst , '0' , null_vec_in , null_vec_out );
      
     booth : entity work.booth_adder_components port map (
         
@@ -378,7 +402,7 @@ begin
         label_10_output,
         
         enable_decoder_dst_booth,
-	sel_dst_booth
+	    sel_dst_booth
         
         );
 
@@ -420,6 +444,5 @@ begin
         
     label_10_input <= label_10_input_booth when  enable_decoder_dst_booth = '1' else
     label_10_input_state_machine when enable_decoder_dst = '1';
-        
-        
+             
 end a_controller;

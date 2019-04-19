@@ -1,0 +1,180 @@
+vsim work.controller
+# vsim work.controller 
+# Start time: 18:47:58 on Apr 19,2019
+# //  ModelSim DE 2019.1 Jan  1 2019 Linux 4.4.0-140-generic
+# //
+# //  Copyright 1991-2019 Mentor Graphics Corporation
+# //  All Rights Reserved.
+# //
+# //  ModelSim DE and its associated documentation contain trade
+# //  secrets and commercial or financial information that are the property of
+# //  Mentor Graphics Corporation and are privileged, confidential,
+# //  and exempt from disclosure under the Freedom of Information Act,
+# //  5 U.S.C. Section 552. Furthermore, this information
+# //  is prohibited from disclosure under the Trade Secrets Act,
+# //  18 U.S.C. Section 1905.
+# //
+# Loading std.standard
+# Loading std.textio(body)
+# Loading ieee.std_logic_1164(body)
+# Loading work.adk_components(body)
+# Loading ieee.numeric_std(body)
+# Loading ieee.math_real(body)
+# Loading work.controller(a_controller)
+# Loading work.fake_vcc(rtl)
+# Loading ieee.vital_timing(body)
+# Loading ieee.vital_primitives(body)
+# Loading work.dffr(dffr_arch)
+# Loading work.dffs_ni(dffs_ni_arch)
+# Loading work.mux21_ni(mux21_ni_arch)
+# Loading work.nor03_2x(nor03_2x_arch)
+# Loading work.dff(dff_arch)
+# Loading work.xnor2(xnor2_arch)
+# Loading work.aoi22(aoi22_arch)
+# Loading work.nand03(nand03_arch)
+# Loading work.nand02(nand02_arch)
+# Loading work.aoi32(aoi32_arch)
+# Loading work.nor04_2x(nor04_2x_arch)
+# Loading work.nor02_2x(nor02_2x_arch)
+# Loading work.oai21(oai21_arch)
+# Loading work.oai22(oai22_arch)
+# Loading work.aoi21(aoi21_arch)
+# Loading work.oai43(oai43_arch)
+# Loading work.or02(or02_arch)
+# Loading work.inv01(inv01_arch)
+# Loading work.mux21(mux21_arch)
+# Loading work.nor02ii(nor02ii_arch)
+# Loading work.fake_gnd(rtl)
+# Loading work.oai32(oai32_arch)
+# Loading work.aoi43(aoi43_arch)
+# Loading work.latch(latch_arch)
+# Loading work.nor04(nor04_arch)
+# Loading work.nand04(nand04_arch)
+# Loading work.xor2(xor2_arch)
+# Loading work.tri01(tri01_arch)
+# Loading work.ao22(ao22_arch)
+# Loading work.inv02(inv02_arch)
+# Loading work.buf02(buf02_arch)
+# Loading work.ao221(ao221_arch)
+# Loading work.ao32(ao32_arch)
+# Loading work.and03(and03_arch)
+# Loading work.ao21(ao21_arch)
+# Loading work.and02(and02_arch)
+# Loading work.or04(or04_arch)
+# Loading work.and04(and04_arch)
+# Loading work.or03(or03_arch)
+# Loading work.special_register_file(a_special_register_file)
+# Loading work.n_dff(a_ndff)
+# Loading work.d_ff(a_dff)
+# Loading work.ram(a_ram)
+add wave -position insertpoint sim:/controller/*
+mem load -filltype value -filldata 2 -fillradix hexadecimal /controller/specialregfile/my_ram/my_ram(0)
+mem load -filltype value -filldata 000 -fillradix hexadecimal /controller/specialregfile/my_ram/my_ram(1)
+mem load -filltype value -filldata 000A0009000800070006000500040003000200010002 -fillradix hexadecimal /controller/specialregfile/my_ram/my_ram(2)
+mem load -filltype value -filldata 000A0009000800070006000500040003000200010002 -fillradix hexadecimal /controller/specialregfile/my_ram/my_ram(3)
+mem load -filltype value -filldata CCCCCC000000000000 -fillradix hexadecimal /controller/specialregfile/my_ram/my_ram(4)
+mem load -filltype value -filldata DDDDDD000000000000 -fillradix hexadecimal /controller/specialregfile/my_ram/my_ram(5)
+mem load -filltype value -filldata EEEEEE000000000000 -fillradix hexadecimal /controller/specialregfile/my_ram/my_ram(6)
+mem load -filltype value -filldata FFFFFF000000000000 -fillradix hexadecimal /controller/specialregfile/my_ram/my_ram(7)
+mem load -filltype value -filldata EEEEEEAAAAAA000000 -fillradix hexadecimal /controller/specialregfile/my_ram/my_ram(8)
+mem load -filltype value -filldata EEEEEEAAAAAA000000 -fillradix hexadecimal /controller/specialregfile/my_ram/my_ram(9)
+mem load -filltype value -filldata EEEEEE000000AAAAA0 -fillradix hexadecimal /controller/specialregfile/my_ram/my_ram(10)
+mem load -filltype value -filldata EEEEEE0000000BBBBB -fillradix hexadecimal /controller/specialregfile/my_ram/my_ram(11)
+mem load -filltype value -filldata EEEEEE00000CCCCCC0 -fillradix hexadecimal /controller/specialregfile/my_ram/my_ram(12)
+mem load -filltype value -filldata EEEEEE00EEEEEE0000 -fillradix hexadecimal /controller/specialregfile/my_ram/my_ram(13)
+mem load -filltype value -filldata EEEEEE0FFFFFFF0000 -fillradix hexadecimal /controller/specialregfile/my_ram/my_ram(14)
+mem load -filltype value -filldata EEEEEE00000000DDDD -fillradix hexadecimal /controller/specialregfile/my_ram/my_ram(15)
+mem load -filltype value -filldata EEEEEE000000AAAAA0 -fillradix hexadecimal /controller/specialregfile/my_ram/my_ram(10)
+mem load -filltype value -filldata EEEEEE0000000BBBBB -fillradix hexadecimal /controller/specialregfile/my_ram/my_ram(11)
+mem load -filltype value -filldata EEEEEE00000CCCCCC0 -fillradix hexadecimal /controller/specialregfile/my_ram/my_ram(12)
+mem load -filltype value -filldata EEEEEE00EEEEEE0000 -fillradix hexadecimal /controller/specialregfile/my_ram/my_ram(13)
+mem load -filltype value -filldata EEEEEE0FFFFFFF0000 -fillradix hexadecimal /controller/specialregfile/my_ram/my_ram(14)
+mem load -filltype value -filldata EEEEEE00000000DDDD -fillradix hexadecimal /controller/specialregfile/my_ram/my_ram(15)
+force -freeze sim:/controller/clk 0 0, 1 {5000 ps} -r 10000
+force -freeze sim:/controller/clk_inv 1 0, 0 {5000 ps} -r 10000
+force -freeze sim:/controller/rst 1 0
+force -freeze sim:/controller/enable_write 0 0
+force -freeze sim:/controller/initiate 0 0
+run
+# ** Warning: NUMERIC_STD.TO_INTEGER: metavalue detected, returning 0
+#    Time: 0 ps  Iteration: 0  Instance: /controller/specialregfile/my_ram
+# ** Warning: NUMERIC_STD.TO_INTEGER: metavalue detected, returning 0
+#    Time: 0 ps  Iteration: 2  Instance: /controller/specialregfile/my_ram
+force -freeze sim:/controller/initiate 1 0
+force -freeze sim:/controller/rst 0 0
+run
+noforce sim:/controller/initiate
+run
+run
+run
+run
+run
+run
+run
+run
+run
+run
+run
+run
+run
+run
+run
+run
+run
+run
+run
+run
+run
+run
+run
+run
+run
+run
+run
+run
+run
+run
+run
+run
+run
+run
+run
+run
+run
+run
+run
+run
+run
+run
+run
+run
+run
+run
+run
+run
+run
+run
+run
+run
+run
+run
+run
+run
+run
+run
+run
+run
+run
+run
+run
+run
+run
+run
+run
+run
+run
+run
+run
+run
+run
+

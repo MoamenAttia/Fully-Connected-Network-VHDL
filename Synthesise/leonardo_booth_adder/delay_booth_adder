@@ -1,0 +1,62 @@
+
+
+
+                        Clock Frequency Report
+
+	Clock                : Frequency
+      ------------------------------------
+
+	clk                  : 130.8 MHz
+
+
+                        Critical Path Report
+
+
+Critical path #1, (path slack =  2.4):
+
+NAME                                                       GATE              ARRIVAL              LOAD
+------------------------------------------------------------------------------------------------------
+clk (offset)                                                               0.00 (rising edge)
+delay thru clock network                                                     0.00 (ideal)
+booth_integrtaion_5_p_Reg_loop1_1_fx_reg_q/CLK             dffr              0.00 (rising edge)
+
+
+booth_integrtaion_5_p_Reg_loop1_1_fx_reg_q/Q               dffr        0.00  0.58 dn             0.09
+ix4051/Y                                                   and02       0.46  1.04 dn             0.07
+ix11394/Y                                                  aoi32       0.50  1.54 up             0.03
+ix4575/Y                                                   xor2        0.51  2.05 dn             0.04
+ix11123/Y                                                  aoi22       0.35  2.40 up             0.04
+ix4109/Y                                                   oai22       0.30  2.70 dn             0.03
+ix11152/Y                                                  aoi22       0.36  3.06 up             0.04
+ix4157/Y                                                   oai22       0.30  3.36 dn             0.03
+ix11192/Y                                                  aoi22       0.36  3.72 up             0.04
+ix4205/Y                                                   oai22       0.30  4.02 dn             0.03
+ix11228/Y                                                  aoi22       0.36  4.37 up             0.04
+ix4253/Y                                                   oai22       0.30  4.67 dn             0.03
+ix11264/Y                                                  aoi22       0.36  5.03 up             0.04
+ix4301/Y                                                   oai22       0.30  5.33 dn             0.03
+ix11300/Y                                                  aoi22       0.36  5.68 up             0.04
+ix4349/Y                                                   oai22       0.30  5.98 dn             0.03
+ix11336/Y                                                  aoi22       0.36  6.34 up             0.04
+ix4397/Y                                                   oai22       0.28  6.62 dn             0.02
+ix11351/Y                                                  xnor2       0.16  6.78 up             0.00
+ix4413/Y                                                   nor02ii     0.10  6.88 dn             0.01
+ix5362/Y                                                   mux21_ni    0.29  7.17 dn             0.02
+booth_integrtaion_5_p_Reg_loop1_32_fx_reg_q/D              dffr        0.00  7.17 dn             0.00
+data arrival time                                                            7.17
+
+clk (offset)                                                               0.00 (rising edge)
+delay thru clock network                                                     0.00 (ideal)
+booth_integrtaion_5_p_Reg_loop1_32_fx_reg_q/CLK            dffr              0.00 (rising edge)
+clock cycle                                                                  10.00
+library setup time                                                          (0.47)
+
+data required time  (default specified - setup time)                          9.53
+------------------------------------------------------------------------------------------------------
+data required time                                                           9.53
+data arrival time                                                            7.17
+                                                                          ----------
+slack                                                                       2.36
+------------------------------------------------------------------------------------------------------
+
+
