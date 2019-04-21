@@ -1,0 +1,18 @@
+load_library tsmc035_typ
+read -technology "tsmc035_typ"  { /home/ayman/Desktop/Multiplication/DFF.vhd }
+read -technology "tsmc035_typ"  { /home/ayman/Desktop/Multiplication/my_nDFF.vhd }
+read -technology "tsmc035_typ"  { /home/ayman/Desktop/Multiplication/shift_reg.vhd }
+pre_optimize -common_logic -unused_logic -boundary -xor_comparator_optimize 
+pre_optimize -extract 
+elaborate shift_reg -architecture my_shift_reg 
+pre_optimize .work.shift_reg.my_shift_reg -common_logic -unused_logic -boundary -xor_comparator_optimize 
+pre_optimize .work.shift_reg.my_shift_reg -extract 
+set register2register 22.000000
+set input2register 22.000000
+set register2output 22.000000
+set_clock -name .work.shift_reg.my_shift_reg.nx95 -clock_cycle "22.000000"
+set_clock -name .work.shift_reg.my_shift_reg.nx95 -pulse_width "11.000000"
+optimize .work.shift_reg.my_shift_reg -target tsmc035_typ -macro -auto -effort quick -hierarchy auto
+optimize_timing .work.shift_reg.my_shift_reg 
+report_area "/home/ayman/Desktop/area shift reg" -cell_usage -all_leafs 
+report_delay "/home/ayman/Desktop/delay shift reg" -num_paths 1 -critical_paths -clock_frequency
