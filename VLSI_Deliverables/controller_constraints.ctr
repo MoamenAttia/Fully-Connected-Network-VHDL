@@ -1,0 +1,31 @@
+set_attribute .work.maximum_ic.a_maximum_ic.clk -name CLOCK_CYCLE -value 10.000000 -port
+set_attribute .work.maximum_ic.a_maximum_ic.clk -name PULSE_WIDTH -value 5.000000 -port
+set_attribute .work.D_ff.a_Dff.clk -name CLOCK_CYCLE -value 10.000000 -port
+set_attribute .work.D_ff.a_Dff.clk -name PULSE_WIDTH -value 5.000000 -port
+set_attribute .work.n_dff_16.a_ndff.clk -name CLOCK_CYCLE -value 10.000000 -port
+set_attribute .work.n_dff_16.a_ndff.clk -name PULSE_WIDTH -value 5.000000 -port
+set_attribute .work.label_register_file.a_label_register_file.clk -name CLOCK_CYCLE -value 10.000000 -port
+set_attribute .work.label_register_file.a_label_register_file.clk -name PULSE_WIDTH -value 5.000000 -port
+set_attribute .work.n_dff_8.a_ndff.clk -name CLOCK_CYCLE -value 10.000000 -port
+set_attribute .work.n_dff_8.a_ndff.clk -name PULSE_WIDTH -value 5.000000 -port
+set_attribute .work.shift_reg_adder_20.my_shift_reg_adder_unfold_4300_0.clk -name CLOCK_CYCLE -value 10.000000 -port
+set_attribute .work.shift_reg_adder_20.my_shift_reg_adder_unfold_4300_0.clk -name PULSE_WIDTH -value 5.000000 -port
+set_attribute .work.my_DFF.a_my_DFF.clk -name CLOCK_CYCLE -value 10.000000 -port
+set_attribute .work.my_DFF.a_my_DFF.clk -name PULSE_WIDTH -value 5.000000 -port
+set_attribute .work.my_nDFF_10.b_my_nDFF.Clk -name CLOCK_CYCLE -value 10.000000 -port
+set_attribute .work.my_nDFF_10.b_my_nDFF.Clk -name PULSE_WIDTH -value 5.000000 -port
+set_attribute .work.shift_reg_10.my_shift_reg_unfold_3038_0.clk -name CLOCK_CYCLE -value 10.000000 -port
+set_attribute .work.shift_reg_10.my_shift_reg_unfold_3038_0.clk -name PULSE_WIDTH -value 5.000000 -port
+set_attribute .work.my_nDFF_33.b_my_nDFF.Clk -name CLOCK_CYCLE -value 10.000000 -port
+set_attribute .work.my_nDFF_33.b_my_nDFF.Clk -name PULSE_WIDTH -value 5.000000 -port
+set_attribute .work.booth_integration_16.my_booth_integration_unfold_4726_0.clk -name CLOCK_CYCLE -value 10.000000 -port
+set_attribute .work.booth_integration_16.my_booth_integration_unfold_4726_0.clk -name PULSE_WIDTH -value 5.000000 -port
+set_attribute .work.booth_adder_components_16.my_booth_adder_components_unfold_3139_0.clk -name CLOCK_CYCLE -value 10.000000 -port
+set_attribute .work.booth_adder_components_16.my_booth_adder_components_unfold_3139_0.clk -name PULSE_WIDTH -value 5.000000 -port
+CLOCK_CYCLE "10.000000" .work.controller.a_controller.clk
+PULSE_WIDTH "5.000000" .work.controller.a_controller.clk
+set_attribute .work.controller.a_controller.clk -name CLOCK_CYCLE -value 10.000000 -port
+set_attribute .work.controller.a_controller.clk -name PULSE_WIDTH -value 5.000000 -port
+set input2register 10.000000
+set register2register 10.000000
+set register2output 10.000000

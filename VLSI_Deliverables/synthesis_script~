@@ -1,0 +1,26 @@
+load_library tsmc035_typ
+set_working_dir /home/ayman/Desktop/Fully-Connected-Network-VHDL/VHDL
+
+read -technology "tsmc035_typ"  { /home/ayman/Desktop/Fully-Connected-Network-VHDL/VHDL/DFF.vhd /home/ayman/Desktop/Fully-Connected-Network-VHDL/VHDL/my_nDFF.vhd /home/ayman/Desktop/Fully-Connected-Network-VHDL/VHDL/shift_reg.vhd /home/ayman/Desktop/Fully-Connected-Network-VHDL/VHDL/shiftregister_integration.vhd /home/ayman/Desktop/Fully-Connected-Network-VHDL/VHDL/onebitadder.vhd /home/ayman/Desktop/Fully-Connected-Network-VHDL/VHDL/nadder.vhd /home/ayman/Desktop/Fully-Connected-Network-VHDL/VHDL/Twos_Complement.vhd /home/ayman/Desktop/Fully-Connected-Network-VHDL/VHDL/compare_add_sub.vhd /home/ayman/Desktop/Fully-Connected-Network-VHDL/VHDL/booth_integration.vhd /home/ayman/Desktop/Fully-Connected-Network-VHDL/VHDL/booth_adder_components.vhd /home/ayman/Desktop/Fully-Connected-Network-VHDL/VHDL/D_ff.vhd /home/ayman/Desktop/Fully-Connected-Network-VHDL/VHDL/N_Dff.vhd /home/ayman/Desktop/Fully-Connected-Network-VHDL/VHDL/decoder4x16.vhd /home/ayman/Desktop/Fully-Connected-Network-VHDL/VHDL/tri_state.vhd /home/ayman/Desktop/Fully-Connected-Network-VHDL/VHDL/label_register_file.vhd /home/ayman/Desktop/Fully-Connected-Network-VHDL/VHDL/alu.vhd  /home/ayman/Desktop/Fully-Connected-Network-VHDL/VHDL/comparator.vhd /home/ayman/Desktop/Fully-Connected-Network-VHDL/VHDL/maximum_ic.vhd /home/ayman/Desktop/Fully-Connected-Network-VHDL/VHDL/controller_counter.vhd }
+
+pre_optimize -common_logic -unused_logic -boundary -xor_comparator_optimize 
+pre_optimize -extract
+elaborate controller -architecture a_controller 
+pre_optimize .work.controller.a_controller -common_logic -boundary -xor_comparator_optimize 
+pre_optimize .work.controller.a_controller -extract 
+set sdf_type combined
+set register2register 10.000000
+set input2register 10.000000
+set register2output 10.000000
+set_clock -name .work.controller.a_controller.clk -clock_cycle "10.000000"
+set_clock -name .work.controller.a_controller.clk -pulse_width "5.000000"
+optimize .work.controller.a_controller -target tsmc035_typ -macro -auto -effort quick -hierarchy flatten 
+optimize_timing .work.controller.a_controller 
+report_area controller_area -cell_usage -all_leafs 
+report_delay controller_delay -num_paths 1 -critical_paths -clock_frequency
+set novendor_constraint_file FALSE
+auto_write controller_output.v
+set novendor_constraint_file FALSE
+auto_write controller_output.vhd
+set novendor_constraint_file FALSE
+auto_write -format SDF controller_output.sdf

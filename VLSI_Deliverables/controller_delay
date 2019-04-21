@@ -1,0 +1,65 @@
+
+
+
+                        Clock Frequency Report
+
+	Clock                : Frequency
+      ------------------------------------
+
+	clk                  : 131.1 MHz
+
+
+                        Critical Path Report
+
+
+Critical path #1, (path slack =  2.4):
+
+NAME                                                        GATE              ARRIVAL              LOAD
+-------------------------------------------------------------------------------------------------------
+clk (offset)                                                                0.00 (rising edge)
+delay thru clock network                                                      0.00 (ideal)
+booth_booth_integrtaion_2_p_Reg_loop1_1_fx_reg_q/CLK          dffr              0.00 (rising edge)
+
+
+booth_booth_integrtaion_2_p_Reg_loop1_1_fx_reg_q/QB
+                                                            dffr        0.00  0.45 up             0.02
+ix35722/Y                                                   inv01       0.27  0.72 dn             0.07
+ix2333/Y                                                    and02       0.34  1.06 dn             0.02
+ix29034/Y                                                   aoi32       0.46  1.52 up             0.03
+ix2857/Y                                                    xor2        0.51  2.04 dn             0.04
+ix28775/Y                                                   aoi22       0.35  2.39 up             0.04
+ix2391/Y                                                    oai22       0.30  2.69 dn             0.03
+ix28805/Y                                                   aoi22       0.36  3.05 up             0.04
+ix2439/Y                                                    oai22       0.30  3.35 dn             0.03
+ix28844/Y                                                   aoi22       0.36  3.70 up             0.04
+ix2487/Y                                                    oai22       0.30  4.00 dn             0.03
+ix28879/Y                                                   aoi22       0.36  4.36 up             0.04
+ix2535/Y                                                    oai22       0.30  4.66 dn             0.03
+ix28914/Y                                                   aoi22       0.36  5.01 up             0.04
+ix2583/Y                                                    oai22       0.30  5.31 dn             0.03
+ix28949/Y                                                   aoi22       0.36  5.67 up             0.04
+ix2631/Y                                                    oai22       0.30  5.97 dn             0.03
+ix28984/Y                                                   aoi22       0.36  6.32 up             0.04
+ix2679/Y                                                    oai22       0.28  6.60 dn             0.02
+ix28997/Y                                                   xnor2       0.16  6.76 up             0.00
+ix2695/Y                                                    nor02ii     0.10  6.86 dn             0.01
+ix15204/Y                                                   mux21_ni    0.29  7.15 dn             0.02
+booth_booth_integrtaion_2_p_Reg_loop1_32_fx_reg_q/D
+                                                            dffr        0.00  7.15 dn             0.00
+data arrival time                                                             7.15
+
+clk (offset)                                                                0.00 (rising edge)
+delay thru clock network                                                      0.00 (ideal)
+booth_booth_integrtaion_2_p_Reg_loop1_32_fx_reg_q/CLK          dffr              0.00 (rising edge)
+clock cycle                                                                   10.00
+library setup time                                                           (0.47)
+
+data required time  (default specified - setup time)                           9.53
+-------------------------------------------------------------------------------------------------------
+data required time                                                            9.53
+data arrival time                                                             7.15
+                                                                           ----------
+slack                                                                        2.37
+-------------------------------------------------------------------------------------------------------
+
+
