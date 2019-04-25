@@ -1,3 +1,5 @@
+
+    
 LIBRARY IEEE;
 USE IEEE.std_logic_1164.all;
 use ieee.numeric_std.all;
@@ -14,7 +16,7 @@ Generic (n:integer :=8);
 END booth_integration;
 
 ARCHITECTURE my_booth_integration OF booth_integration IS
-signal shift_reg_output : std_logic_vector(n-3 downto 0);
+signal shift_reg_output : std_logic_vector(n+1 downto 0);
 signal S,A,p_initial,cmp_add_sub_output: std_logic_vector(2*n downto 0);
 signal R_twos_complement : std_logic_vector (n-1 downto 0);
 signal p_reg_input,p_reg_output : std_logic_vector (2*n downto 0);
@@ -26,12 +28,14 @@ a <= R&(R'length downto 0 =>'0');
 Twos_Complement:entity work.Twos_Complement  generic map (n) port map ( R,R_twos_complement);
 --R_twos_complement <= (not R) + '1';
 s <= R_twos_complement&(R_twos_complement'length downto 0=>'0');
-p_reg_en <= not (shift_reg_output(n-3));
+p_reg_en <= not (shift_reg_output(n+1));
 -------------------------------
-shift_Reg:entity work.shift_reg  generic map (n-2) port map ( set, clk , rst ,shift_reg_output);
+shift_Reg:entity work.shift_reg_adder  generic map (n+2) port map ( set, clk ,shift_reg_output);
 cmp_add_sub:entity work.compare_add_sub  generic map (2*n+1)port map ( p_reg_output, A , S ,cmp_add_sub_output);  
 p_Reg:entity work.my_nDFF  generic map (2*n+1) port map (clk,rst,p_reg_input,p_reg_output,p_reg_en);
 p_reg_input<=p_initial when shift_reg_output(0) = '1'
 else cmp_add_sub_output when shift_reg_output(0) = '0';
 booth_output <= p_reg_output(2*n downto 1);
 END my_booth_integration;
+
+
