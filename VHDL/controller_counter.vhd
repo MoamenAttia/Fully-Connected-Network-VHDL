@@ -12,23 +12,24 @@ entity controller is
     );
     port (
         clk            : in    std_logic; 
-        clk_inv        : in    std_logic; 
         rst            : in    std_logic;
         initiate       : inout std_logic;
 
+        -- IO integration
         enable_read     : out std_logic;
-        address         : out std_logic_vector(7 downto 0);
-        --mdr_data_out    : in std_logic_vector(255 downto 0);
-        
-	-- memory
-        enable_mar_in  : inout std_logic;
-        enable_mdr_in  : inout std_logic;
-        enable_mdr_out : inout std_logic;
-        enable_write   : inout std_logic;
-        mdr_data_out   : inout std_logic_vector(255 downto 0);
-        
+        address_out     : inout std_logic_vector(7 downto 0);
+        data_in         : in std_logic_vector(255 downto 0);
+
         answer    : out std_logic_vector(15 downto 0);
         done_comp : inout std_logic
+        
+        -- memory
+        --clk_inv        : in    std_logic; 
+        --enable_mar_in  : inout std_logic;
+        --enable_mdr_in  : inout std_logic;
+        --enable_mdr_out : inout std_logic;
+        --enable_write   : inout std_logic;
+        --mdr_data_out   : inout std_logic_vector(255 downto 0);
     );
 end entity controller;
 
@@ -56,7 +57,6 @@ architecture a_controller of controller is
     -- address
     signal enable_address : std_logic;
     signal address_in  : std_logic_vector(7 downto 0);
-    signal address_out : std_logic_vector(7 downto 0);    
 
     signal alu_inp1  : std_logic_vector(label_size - 1 downto 0);
     signal alu_inp2  : std_logic_vector(label_size - 1 downto 0);
@@ -77,7 +77,7 @@ architecture a_controller of controller is
     signal label_9_input  : std_logic_vector(15 downto 0);
     signal label_10_input : std_logic_vector(15 downto 0);
 
-    ------------- label outpout ------------
+    ------------- label output ------------
     signal label_1_output   : std_logic_vector(15 downto 0);
     signal label_2_output   : std_logic_vector(15 downto 0);
     signal label_3_output   : std_logic_vector(15 downto 0);
@@ -117,7 +117,6 @@ architecture a_controller of controller is
     signal label_9_input_booth  : std_logic_vector(15 downto 0);
     signal label_10_input_booth : std_logic_vector(15 downto 0);
     
-
     signal start_comp : std_logic;
 
 begin
@@ -132,11 +131,9 @@ begin
             enable_decoder_dst <= '0';
             alu_cin <= '0';
             enable_num <= '0';
+            enable_address <= '0';
             ready_signal <= '0';
-            enable_mar_in  <= '0';
-            enable_mdr_in  <= '0';
-            enable_mdr_out <= '0';
-            enable_write   <= '0';
+            enable_read <= '0';
             address_in <= ( 7 downto 0 => '0');
 
             start_comp <= '0';
@@ -160,10 +157,7 @@ begin
             elsif (state = "000" ) then
                 if (sub_state = "000") then
                     sel_dst <= "0000"; 
-                    enable_mar_in <= '0';
-                    enable_write <= '0'; 
-                    enable_mdr_in <= '0';
-                    enable_mdr_out <= '0'; 
+                    enable_read <= '0';
                     enable_decoder_dst <= '0';
                     address_in <= "00000000";
                     enable_num <= '1';
@@ -172,68 +166,56 @@ begin
                 elsif (sub_state = "001") then
                     sub_state <= "010";
                     enable_address <= '1';
-                    enable_mar_in <= '1';
-                    enable_mdr_in <= '1';
+                    enable_read <= '1';
                 elsif (sub_state = "010") then 
                     sub_state <= "011";
                     alu_inp1 <= address_out;
                     alu_inp2 <= "00000001";
                     alu_sel <= '0';
-                    enable_mar_in <= '0';
+                    enable_read <= '0';
                 elsif (sub_state = "011") then
                     sub_state <= "100";
-                    enable_mdr_out <= '1';
                     address_in <= alu_out;
-                    enable_mdr_in <= '0';
                 else
                     sub_state <= "000";
-                    num_in <= mdr_data_out(7 downto 0);
+                    num_in <= data_in(7 downto 0);
                     state <= "001";
-                    enable_mdr_out <= '0';
                 end if;
 
             elsif (state = "001") then
                 if(sub_state = "000") then
                     sel_dst <= "0000"; 
-                    enable_mar_in <= '0';
-                    enable_write <= '0'; 
-                    enable_mdr_in <= '0';
-                    enable_mdr_out <= '0'; 
+                    enable_read <= '0';
                     enable_decoder_dst <= '0';
                     sub_state <= "001";
                 elsif (sub_state = "001") then 
                     sub_state <= "010";
-                    enable_mar_in <= '1';
-                    enable_mdr_in <= '1';
+                    enable_read <= '1';
                 elsif (sub_state = "010") then
                     sub_state <= "011";
+                    enable_read <= '0';
                     alu_inp1 <= address_out;
                     alu_inp2 <= "00000001";
                     alu_sel <= '0';
-                    enable_mar_in <= '0';
                 elsif (sub_state = "011") then
                     sub_state <= "100";
-                    address_in <= alu_out;
-                    enable_mdr_in <= '0';
-                    
-                    
+                    address_in <= alu_out; 
                 else
                     sub_state <= "000";
                     state <= "010";
-                    enable_mdr_out <= '0';
                     enable_decoder_dst <= '1';
                     sel_dst <= "1111";
 
-                    label_1_input_state_machine  <= mdr_data_out(15 downto 0);
-                    label_2_input_state_machine  <= mdr_data_out(31 downto 16);
-                    label_3_input_state_machine  <= mdr_data_out(47 downto 32);
-                    label_4_input_state_machine  <= mdr_data_out(63 downto 48);
-                    label_5_input_state_machine  <= mdr_data_out(79 downto 64);
-                    label_6_input_state_machine  <= mdr_data_out(95 downto 80);
-                    label_7_input_state_machine  <= mdr_data_out(111 downto 96);
-                    label_8_input_state_machine  <= mdr_data_out(127 downto 112);
-                    label_9_input_state_machine  <= mdr_data_out(143 downto 128);
-                    label_10_input_state_machine <= mdr_data_out(159 downto 144);
+                    label_1_input_state_machine  <= data_in(15 downto 0);
+                    label_2_input_state_machine  <= data_in(31 downto 16);
+                    label_3_input_state_machine  <= data_in(47 downto 32);
+                    label_4_input_state_machine  <= data_in(63 downto 48);
+                    label_5_input_state_machine  <= data_in(79 downto 64);
+                    label_6_input_state_machine  <= data_in(95 downto 80);
+                    label_7_input_state_machine  <= data_in(111 downto 96);
+                    label_8_input_state_machine  <= data_in(127 downto 112);
+                    label_9_input_state_machine  <= data_in(143 downto 128);
+                    label_10_input_state_machine <= data_in(159 downto 144);
 
                 end if;
             
@@ -246,17 +228,13 @@ begin
                 elsif (ready_signal = '0' or done = '1') then
                     if(sub_state = "000") then
                         sel_dst <= "0000";
-                        enable_mar_in <= '0';
-                        enable_write <= '0';
-                        enable_mdr_in <= '0';
-                        enable_mdr_out <= '0';
+                        enable_read <= '0';
                         enable_decoder_dst <= '0';
                         ready_signal <= '0';
                         sub_state <= "001";
                     elsif (sub_state = "001") then
                         sub_state <= "010";
-                        enable_mar_in <= '1';
-                        enable_mdr_in <= '1';
+                        enable_read <= '1';
                         alu_inp1 <= address_out;
                         alu_inp2 <= "00000001";
                         alu_sel <= '0';
@@ -266,17 +244,13 @@ begin
                     else 
 	    	        	sub_state <= "000";
 		    	        state <= "011";
-                        enable_mar_in <= '0';
-                        enable_mdr_in <= '0';
+                        enable_read <= '0';
                     end if;    
                 end if ;
             elsif(state = "011") then
                 if (sub_state = "000") then
                     sel_dst <= "0000"; 
-                    enable_mar_in <= '0';
-                    enable_write <= '0'; 
-                    enable_mdr_in <= '0';
-                    enable_mdr_out <= '0'; 
+                    enable_read <= '0';
                     enable_decoder_dst <= '0';
                     alu_inp1 <= num_out;
                     alu_inp2 <= "00000001";
@@ -296,7 +270,7 @@ begin
         end if;
     end process; 
     
-     specialregfile : entity work.special_register_file port map ( clk , clk_inv , rst ,  enable_mar_in , enable_mdr_in , enable_mdr_out , enable_write , address_out, mdr_data_out );
+    -- specialregfile : entity work.special_register_file port map ( clk , clk_inv , rst ,  enable_mar_in , enable_mdr_in , enable_mdr_out , enable_write , address_out, mdr_data_out );
     -- address_out <= address_out_7 & address_out_6 & address_out_5 & address_out_4 & address_out_3 & address_out_2 & address_out_1 & address_out_0;
     -- signal address_out : std_logic_vector(7 downto 0);
 
@@ -365,17 +339,17 @@ begin
         done,
 
         -- Neuron and its weights
-        mdr_data_out(15 downto 0)  ,
-        mdr_data_out(31 downto 16),
-        mdr_data_out(47 downto 32)  ,
-        mdr_data_out(63 downto 48),
-        mdr_data_out(79 downto 64),
-        mdr_data_out(95 downto 80),
-        mdr_data_out(111 downto 96),
-        mdr_data_out(127 downto 112),
-        mdr_data_out(143 downto 128),
-        mdr_data_out(159 downto 144),
-        mdr_data_out(175 downto 160),
+        data_in(15 downto 0),
+        data_in(31 downto 16),
+        data_in(47 downto 32),
+        data_in(63 downto 48),
+        data_in(79 downto 64),
+        data_in(95 downto 80),
+        data_in(111 downto 96),
+        data_in(127 downto 112),
+        data_in(143 downto 128),
+        data_in(159 downto 144),
+        data_in(175 downto 160),
         
         label_1_input_booth,
         label_2_input_booth,
@@ -402,7 +376,7 @@ begin
         enable_decoder_dst_booth,
 	    sel_dst_booth
         
-        );
+    );
 
     label_reg_file_enable_decoder_dst <= '1' when (enable_decoder_dst = '1' or enable_decoder_dst_booth = '1') else
                                          '0';
