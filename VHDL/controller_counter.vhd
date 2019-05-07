@@ -15,31 +15,18 @@ entity controller is
         clk_inv        : in    std_logic; 
         rst            : in    std_logic;
         initiate       : inout std_logic;
-        ready_signal   : inout std_logic;
-        done           : inout std_logic;
 
-        -- memory
+        enable_read     : out std_logic;
+        address         : out std_logic_vector(7 downto 0);
+        --mdr_data_out    : in std_logic_vector(255 downto 0);
+        
+	-- memory
         enable_mar_in  : inout std_logic;
         enable_mdr_in  : inout std_logic;
         enable_mdr_out : inout std_logic;
         enable_write   : inout std_logic;
         mdr_data_out   : inout std_logic_vector(255 downto 0);
         
-	 ---------------- Labels Ports --------------------------
-        label_1_output : inout std_logic_vector(15 downto 0);
-        label_2_output : inout std_logic_vector(15 downto 0);
-        label_3_output : inout std_logic_vector(15 downto 0);
-        label_4_output : inout std_logic_vector(15 downto 0);
-        label_5_output : inout std_logic_vector(15 downto 0);
-        label_6_output : inout std_logic_vector(15 downto 0);
-        label_7_output : inout std_logic_vector(15 downto 0);
-        label_8_output : inout std_logic_vector(15 downto 0);
-        label_9_output : inout std_logic_vector(15 downto 0);
-        label_10_output: inout std_logic_vector(15 downto 0);
-
-        
-	    state     : inout std_logic_vector(2 downto 0); 
-        sub_state : inout std_logic_vector(2 downto 0);
         answer    : out std_logic_vector(15 downto 0);
         done_comp : inout std_logic
     );
@@ -90,7 +77,17 @@ architecture a_controller of controller is
     signal label_9_input  : std_logic_vector(15 downto 0);
     signal label_10_input : std_logic_vector(15 downto 0);
 
-    
+    ------------- label outpout ------------
+    signal label_1_output   : std_logic_vector(15 downto 0);
+    signal label_2_output   : std_logic_vector(15 downto 0);
+    signal label_3_output   : std_logic_vector(15 downto 0);
+    signal label_4_output   : std_logic_vector(15 downto 0);
+    signal label_5_output   : std_logic_vector(15 downto 0);
+    signal label_6_output   : std_logic_vector(15 downto 0);
+    signal label_7_output   : std_logic_vector(15 downto 0);
+    signal label_8_output   : std_logic_vector(15 downto 0);
+    signal label_9_output   : std_logic_vector(15 downto 0);
+    signal label_10_output  : std_logic_vector(15 downto 0);
 
 
     signal label_1_input_state_machine  : std_logic_vector(15 downto 0);
@@ -104,9 +101,10 @@ architecture a_controller of controller is
     signal label_9_input_state_machine  : std_logic_vector(15 downto 0);
     signal label_10_input_state_machine : std_logic_vector(15 downto 0);
 
-
-
-    
+    signal state     : std_logic_vector(2 downto 0); 
+    signal sub_state : std_logic_vector(2 downto 0);
+    signal ready_signal   : std_logic;    -- from state machine to booth
+    signal done           : std_logic;    -- from booth to state machine
 
     signal label_1_input_booth  : std_logic_vector(15 downto 0); 
     signal label_2_input_booth  : std_logic_vector(15 downto 0);
@@ -298,7 +296,7 @@ begin
         end if;
     end process; 
     
-    -- specialregfile : entity work.special_register_file port map ( clk , clk_inv , rst ,  enable_mar_in , enable_mdr_in , enable_mdr_out , enable_write , address_out, mdr_data_out );
+     specialregfile : entity work.special_register_file port map ( clk , clk_inv , rst ,  enable_mar_in , enable_mdr_in , enable_mdr_out , enable_write , address_out, mdr_data_out );
     -- address_out <= address_out_7 & address_out_6 & address_out_5 & address_out_4 & address_out_3 & address_out_2 & address_out_1 & address_out_0;
     -- signal address_out : std_logic_vector(7 downto 0);
 
@@ -355,7 +353,7 @@ begin
 
     alu_subtractor_adder : entity work.alu generic map ( label_size ) port map ( alu_inp1 , alu_inp2 , alu_sel , alu_cin , alu_out , alu_cout );
 
-    address: entity work.N_Dff generic map (address_size) port map ( clk , rst , enable_address , address_in , address_out );
+    addr: entity work.N_Dff generic map (address_size) port map ( clk , rst , enable_address , address_in , address_out );
     num : entity work.N_Dff generic map ( 8 ) port map ( clk , rst , enable_num , num_in , num_out );
     null_vec : entity work.N_Dff generic map ( 8 ) port map ( clk , rst , '0' , null_vec_in , null_vec_out );
      
